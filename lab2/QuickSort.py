@@ -5,3 +5,21 @@ while n
     array = entrada.read()
     print(array)
     
+função_particionamento_Lomuto 
+
+função_particionamento_Hoare
+
+
+função _particionador_aleatotio
+{
+    função_particionamento_Lomuto 
+
+    função_particionamento_Hoare
+}
+
+função _particionador_mediana3
+{
+    função_particionamento_Lomuto 
+
+    função_particionamento_Hoare
+}
