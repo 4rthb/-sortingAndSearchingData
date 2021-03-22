@@ -1,11 +1,15 @@
-entrada = open("entrada.txt","r")
-n = entrada.readline()      # n = numero de casos
-while n
-    m = entrada.readline(1)     # m = numero de elementos do array
-    array = entrada.read()
-    print(array)
+import csv
+import random
+import math
+
+def sorted(n):
+	l = list(range(n))
+	l.insert(0, n)
+	return l
+
     
-função_particionamento_Lomuto 
+def particionamento_Lomuto_aleatori(array, esq, dir):
+    
 
 função_particionamento_Hoare
 
