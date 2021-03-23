@@ -1,17 +1,18 @@
 import random
 
-def swap_arr(arr, m, n)
+def swap_arr(arr, m, n):
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
+    print(arr)
 
 def hoareRandom(arr, lo, hi):
-    swap_arr(arr,lo,random.randint(0,len(arr))
+    swap_arr(arr,lo,random.randint(0,len(arr)))
     pivot = arr[lo]
     i = lo
     j = hi
     esq = 1
-    while i < f:
+    while i < j:
         if esq:
             if pivot >= arr[j]:
                 swap_arr(arr,i,j)

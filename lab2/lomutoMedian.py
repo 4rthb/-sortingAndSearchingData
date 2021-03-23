@@ -1,7 +1,10 @@
-def swap_arr(arr, m, n)
+import math
+
+def swap_arr(arr, m, n):
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
+    print(arr)
 
 def lomuto(arr, lo, hi):
     pivot = arr[hi]
@@ -14,16 +17,17 @@ def lomuto(arr, lo, hi):
     return i+1
 
 def lomutoMedian(arr, lo, hi):
-    if arr[lo] > arr[(hi+lo)/2] :
-        swap_arr(arr, lo, (hi+lo)/2)
+    med = math.floor((hi+lo)/2)
+    if arr[lo] > arr[med] :
+        swap_arr(arr, lo, med)
     if arr[lo] > arr[hi] :
         swap_arr(arr, hi, lo)
-    if arr[(hi+lo)/2] < arr[hi] :
-        swap_arr(arr, (hi+lo)/2], hi)
+    if arr[med] < arr[hi] :
+        swap_arr(arr, med, hi)
     return lomuto(arr, lo, hi)
 
 def quicksort(arr, lo, hi):
-if lo < hi:
-    p = lomutoMedian(arr, lo, hi)           
-    quicksort(arr, lo, p - 1)           #esquerda
-    quicksort(arr, p + 1, hi)           #direita
+    if lo < hi:
+        p = lomutoMedian(arr, lo, hi)
+        quicksort(arr, lo, p - 1)           #esquerda
+        quicksort(arr, p + 1, hi)           #direita

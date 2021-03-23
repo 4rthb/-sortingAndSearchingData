@@ -1,12 +1,13 @@
 import random
 
-def swap_arr(arr, m, n)
+def swap_arr(arr, m, n):
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
+    print(arr)
 
 def lomutoRandom(arr, lo, hi):
-    swap_arr(arr,hi,random.randint(0,len(arr))
+    swap_arr(arr,hi,random.randint(0,len(arr)))
     pivot = arr[hi]
     i = lo - 1
     for j in range(lo,hi - 1):

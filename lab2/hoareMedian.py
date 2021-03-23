@@ -1,14 +1,17 @@
-def swap_arr(arr, m, n)
+import math
+
+def swap_arr(arr, m, n):
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
+    print(arr)
 
 def hoare(arr, lo, hi):
     pivot = arr[lo]
     i = lo
     j = hi
     esq = 1
-    while i < f:
+    while i < j:
         if esq:
             if pivot >= arr[j]:
                 swap_arr(arr,i,j)
@@ -28,12 +31,13 @@ def hoare(arr, lo, hi):
     return k
 
 def hoareMedian(arr, lo, hi):
-    if arr[hi] < arr[(hi+lo)/2]
-        swap_arr(arr, hi, (hi+lo)/2)
-    if arr[hi] < arr[lo] 
+    med = math.floor((hi+lo)/2)
+    if arr[hi] < arr[med]:
+        swap_arr(arr, hi, med)
+    if arr[hi] < arr[lo]:
         swap_arr(arr, hi, lo)
-    if arr[(hi+lo)/2] > arr[lo]
-        swap_arr(arr, (hi+lo)/2], lo)
+    if arr[med] > arr[lo]:
+        swap_arr(arr, med, lo)
     return hoare(arr, lo, hi)
 
 def quicksort(arr, lo, hi):
