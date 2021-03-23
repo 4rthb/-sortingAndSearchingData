@@ -14,12 +14,12 @@ def lomuto(arr, lo, hi):
     return i+1
 
 def lomutoMedian(arr, lo, hi):
-    if arr[lo] > arr[(hi-lo)/2] :           
-        swap_arr(arr, lo, (hi-lo)/2)
+    if arr[lo] > arr[(hi+lo)/2] :
+        swap_arr(arr, lo, (hi+lo)/2)
     if arr[lo] > arr[hi] :
         swap_arr(arr, hi, lo)
-    if arr[(hi-lo)/2] > arr[hi] :
-        swap_arr(arr, (hi-lo)/2], hi)
+    if arr[(hi+lo)/2] < arr[hi] :
+        swap_arr(arr, (hi+lo)/2], hi)
     return lomuto(arr, lo, hi)
 
 def quicksort(arr, lo, hi):

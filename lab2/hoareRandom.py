@@ -1,19 +1,13 @@
-import csv
 import random
-import math
 
 def swap_arr(arr, m, n)
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
 
-def sorted(m,n):
-	l = list(range(m, n))
-	l.insert(m, n)
-	return l
-
-def hoareRandom(arr, lo, hi,):
-    pivot = arr[sorted(lo,hi)]
+def hoareRandom(arr, lo, hi):
+    swap_arr(arr,lo,random.randint(0,len(arr))
+    pivot = arr[lo]
     i = lo
     j = hi
     esq = 1

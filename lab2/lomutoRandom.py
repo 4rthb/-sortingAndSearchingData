@@ -1,19 +1,13 @@
-import csv
 import random
-import math
 
 def swap_arr(arr, m, n)
     chave=arr[m]
     arr[m]=arr[n]
     arr[n]=chave
 
-def sorted(m,n):
-	l = list(range(m, n))
-	l.insert(m, n)
-	return l
-
 def lomutoRandom(arr, lo, hi):
-    pivot = arr[sorted(lo, hi)]
+    swap_arr(arr,hi,random.randint(0,len(arr))
+    pivot = arr[hi]
     i = lo - 1
     for j in range(lo,hi - 1):
         if arr[j] <= pivot:
