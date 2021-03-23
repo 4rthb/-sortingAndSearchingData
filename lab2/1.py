@@ -26,7 +26,6 @@ while n:
     n-=1
 
 
-
 for ind, arr in enumerate(array):##############HOARE MEDIAN
     times[ind]=time.process_time()
     hoareMedian.quicksort(array[ind],0,len(array[ind])-1)
@@ -46,7 +45,6 @@ for arr in array:
     ofiles[0].write("\n")
 statfiles[0].write("Estatisticas:\nNumero de swaps por vetor\tNumero total de chamadas recursivas\tTempo de execucao\n")
 for tim, rec in zip(times, recswap):
-    statfiles[0].write("\t\t\t\t\t")
     statfiles[0].write(str(rec[0]))
     statfiles[0].write("\t\t\t\t\t")
     statfiles[0].write(str(rec[1]))
@@ -73,7 +71,6 @@ for arr in array:
     ofiles[1].write("\n")
 statfiles[1].write("Estatisticas:\nNumero de swaps por vetor\tNumero total de chamadas recursivas\tTempo de execucao\n")
 for tim, rec in zip(times, recswap):
-    statfiles[1].write("\t\t\t\t\t")
     statfiles[1].write(str(rec[0]))
     statfiles[1].write("\t\t\t\t\t")
     statfiles[1].write(str(rec[1]))
@@ -101,7 +98,6 @@ for arr in array:
     ofiles[2].write("\n")
 statfiles[2].write("Estatisticas:\nNumero de swaps por vetor\tNumero total de chamadas recursivas\tTempo de execucao\n")
 for tim, rec in zip(times, recswap):
-    statfiles[2].write("\t\t\t\t\t")
     statfiles[2].write(str(rec[0]))
     statfiles[2].write("\t\t\t\t\t")
     statfiles[2].write(str(rec[1]))
@@ -128,7 +124,6 @@ for arr in array:
     ofiles[3].write("\n")
 statfiles[3].write("Estatisticas:\nNumero de swaps por vetor\tNumero total de chamadas recursivas\tTempo de execucao\n")
 for tim, rec in zip(times, recswap):
-    statfiles[3].write("\t\t\t\t\t")
     statfiles[3].write(str(rec[0]))
     statfiles[3].write("\t\t\t\t\t")
     statfiles[3].write(str(rec[1]))
@@ -136,9 +131,6 @@ for tim, rec in zip(times, recswap):
     statfiles[3].write(str(tim))
     statfiles[3].write("\n")
 
-
-print(times)
-print(recswap)
 
 for file, stat in zip(ofiles, statfiles):
     file.close()

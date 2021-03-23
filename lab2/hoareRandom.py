@@ -15,17 +15,22 @@ def hoareRandomR(arr, lo, hi):
 def hoareRandom(arr, lo, hi):
     global nswaps
     pivot = arr[lo]
-    i = lo
-    j = hi
-    while True:
-        while arr[i]<pivot:
-            i+=1
-        while arr[j]>pivot:
-            j-=1
-        if i>=j:
+    i = lo-1
+    j = hi+1
+    while i<= j:
+        while True:
+            j -= 1
+            if arr[j] <= pivot:
+                break
+        while True:
+            i += 1
+            if arr[i] >= pivot:
+                break
+        if i < j:
+            arr[i], arr[j] = arr[j], arr[i]
+            nswaps+=1
+        else:
             return j
-        arr[i], arr[j] = arr[j], arr[i]
-        nswaps+=1
 
 def quicksort(arr, lo, hi):
     global nrec
