@@ -20,13 +20,13 @@ while n:
     array[-1] = [ int(x) for x in array[-1] ]
     times.append(0)
     n-=1
-ind = -1
-arr = array[ind]
-#for ind, arr in enumerate(array):  #hoare median
-times[ind]=time.process_time()
-hoareMedian.quicksort(array[ind],0,len(array[ind])-1)
-times[ind] = time.process_time() - times[ind]
-print(array[ind]==sorted(arr))
+for ind, arr in enumerate(array):  #hoare median
+    times[ind]=time.process_time()
+    hoareRandom.quicksort(array[ind],0,len(array[ind])-1)
+    times[ind] = time.process_time() - times[ind]
+    print(array[ind]==sorted(arr))
+    print(array[ind])
+    print(sorted(arr))
 print(times)
 
 

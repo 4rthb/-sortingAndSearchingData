@@ -1,24 +1,22 @@
 import random
 
-def swap_arr(arr, m, n):
-    chave=arr[m]
-    arr[m]=arr[n]
-    arr[n]=chave
-    print(arr)
+def lomutoRandomR(arr, lo, hi):
+    r = random.randrange(lo,hi)
+    arr[hi], arr[r] = arr[r], arr[hi]
+    return lomutoRandom(arr,lo,hi)
 
 def lomutoRandom(arr, lo, hi):
-    swap_arr(arr,hi,random.randint(0,len(arr)))
-    pivot = arr[hi]
-    i = lo - 1
-    for j in range(lo,hi - 1):
+    pivot =  arr[hi]
+    i = lo
+    for j in range(lo,hi):
         if arr[j] <= pivot:
-            i = i + 1
-            swap_arr(arr, i, j)            
-    swap_arr(arr, i+1, hi)
-    return i+1
+            arr[i], arr[j] = arr[j], arr[i]
+            i+=1
+    arr[hi], arr[i] = arr[i], arr[hi]
+    return i
 
 def quicksort(arr, lo, hi):
     if lo < hi:
-        p = lomutoRandom(arr, lo, hi)
-        quicksort(arr, lo, p - 1)
+        p = lomutoRandomR(arr, lo, hi)
+        quicksort(arr, lo, p-1)
         quicksort(arr, p + 1, hi)
