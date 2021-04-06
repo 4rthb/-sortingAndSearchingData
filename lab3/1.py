@@ -1,4 +1,4 @@
-import msd
+import radixsort
 
 fname = ["frankestein_clean.txt","war_and_peace_clean.txt"]
 outname = ["frankestein_clean_ordenado.txt","war_and_peace_clean_ordenado.txt","frankestein_clean_stats.txt","war_and_peace_clean_stats.txt"]
@@ -42,5 +42,5 @@ for file in entrada:
     file.close()
 for file in saida:
     file.close()
-print("Process completed!)
+print("Process completed!")
 
