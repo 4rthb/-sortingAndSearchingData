@@ -15,3 +15,5 @@ Resposta à pergunta do LAB 3:
   quando ordenamos strings maiores, por exemplo: "ar" é maior, na ordem lexicográfica, que "árvore", "arbório" e "arsênico", logo podemos desconsiderar "ar" do ordenamento das
   palavras que contém prefixo "ar-", economizando tempo. Além de que, usando LSB precisamos ter um tamanho fixo de string ou começar a ordenar a partir de um tamanho máximo,
   percorrendo a lista de strings em todas as iterações para ordenar as de tamanho válido.
+- Como nossa implementação de MSB demorou muito para completar, não conseguimos testá-la por completo com os arquivos dados, mas nos testes que fizemos parece funcionar. Logo, tivemos
+  que buscar uma outra implementação para usar com os arquivos, e encontramos uma LSB que funciona bem.
