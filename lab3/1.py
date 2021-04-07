@@ -17,26 +17,26 @@ for word in f1:
     if word not in ocur[0]:
         ocur[0][word] = f1.count(word)
 print("First file stats analyzed!")
-for word in f2:
-    if word not in ocur[1]:
-        ocur[1][word] = f2.count(word)
-print("Second file stats analyzed!")
+# for word in f2:
+#     if word not in ocur[1]:
+#         ocur[1][word] = f2.count(word)
+# print("Second file stats analyzed!")
 
 for word in ocur[0].items():
     saida[2].write(f"{word[0]}: {word[1]}\n")
-for word in ocur[1].items():
-    saida[3].write(f"{word[0]}: {word[1]}\n")
-print("Stats files completed!")
-
-f1.sort()
-f2.sort()
+# for word in ocur[1].items():
+#     saida[3].write(f"{word[0]}: {word[1]}\n")
+# print("Stats files completed!")
+# print(f2)
+radixsort.sort(f1,0,len(f1)-1,0)
+# f2.sort()
 print("Files now sorted!")
-
+print(f2)
 for word in f1:
     saida[0].write("%s " % word)
-for word in f2:
-    saida[1].write("%s " % word)
-print("Sorted files completed!")
+# for word in f2:
+#     saida[1].write("%s " % word)
+# print("Sorted files completed!")
 
 for file in entrada:
     file.close()
