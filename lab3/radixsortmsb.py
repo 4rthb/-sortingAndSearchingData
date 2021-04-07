@@ -12,8 +12,8 @@ def posicao_char(arr, d):
 
 #organizar array
 def sort(arr, lo, hi, d):
-    print(arr[hi], arr[hi])
-    if d==len(arr[hi]) and d==len(arr[lo]) :
+
+    if d >= len(arr[hi]) and d >= len(arr[lo]) :
         return None
 #d é a posição de onde deve partir
     cont=[]
@@ -39,9 +39,10 @@ def sort(arr, lo, hi, d):
         if aux[i-lo]!=" ":
             arr[i]=aux[i-lo]
     #chama a funcao para a proxima posicao de caractere
+    print(arr)
     for i in range(0, 27, 1):
         #print(i)
-        print(cont[i], cont[i+1]-1)       
+        #print(cont[i], cont[i+1]-1)       
         sort(arr, lo + cont[i], lo + cont[i+1]-1, d+1)
 
 

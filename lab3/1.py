@@ -1,4 +1,4 @@
-import radixsort
+import radixsortmsb
 
 fname = ["frankestein_clean.txt","war_and_peace_clean.txt"]
 outname = ["frankestein_clean_ordenado.txt","war_and_peace_clean_ordenado.txt","frankestein_clean_stats.txt","war_and_peace_clean_stats.txt"]
@@ -28,7 +28,7 @@ for word in ocur[0].items():
 #     saida[3].write(f"{word[0]}: {word[1]}\n")
 # print("Stats files completed!")
 # print(f2)
-radixsort.sort(f1,0,len(f1)-1,0)
+radixsortmsb.sort(f1,0,len(f1)-1,0)
 # f2.sort()
 print("Files now sorted!")
 '''print(f2)'''
