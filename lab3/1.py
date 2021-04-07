@@ -31,7 +31,7 @@ for word in ocur[0].items():
 radixsort.sort(f1,0,len(f1)-1,0)
 # f2.sort()
 print("Files now sorted!")
-print(f2)
+'''print(f2)'''
 for word in f1:
     saida[0].write("%s " % word)
 # for word in f2:
