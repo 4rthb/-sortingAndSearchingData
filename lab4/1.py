@@ -17,14 +17,16 @@ for name in names:
     hashes = [hash.hornerHash(name, len(tables[0])),hash.hornerHash(name, len(tables[1])),hash.fullNameHash(name, len(tables[2])),
               hash.fullNameHash(name, len(tables[3]))]
     hash.insert_eabq(hashes[0],name,tables[0],0)
-    hash.insert_eabq(hashes[2],name,tables[1],0)
-    hash.insert_chain(hashes[1],name,tables[2])
+    hash.insert_eabq(hashes[2],name,tables[2],0)
+    hash.insert_chain(hashes[1],name,tables[1])
     hash.insert_chain(hashes[3],name,tables[3])
 print("Nomes inseridos!")
 
 for name in search:
-    print(name, "se encontra na tabela na posição: ", hash.consulta_eabqH(name, tables[0]))
-    print(name, "se encontra na tabela na posição: ", hash.consulta_eabqFN(name, tables[1]))
-    print(name, "se encontra na tabela na posição: ", hash.consulta_chainH(name, tables[2]))
-    print(name, "se encontra na tabela na posição: ", hash.consulta_chainFN(name, tables[3]))
+    returns = [hash.consulta_eabqH(name, tables[0]), hash.consulta_eabqFN(name, tables[2]), hash.consulta_chainH(name, tables[1]),
+               hash.consulta_chainFN(name, tables[3])]
+    print(name, "se encontra na tabela? número de acessos: {} e hash: {}".format(returns[0][0], returns[0][1]))
+    print(name, "se encontra na tabela? número de acessos: {} e hash: {}".format(returns[1][0], returns[1][1]))
+    print(name, "se encontra na tabela? número de acessos: {} e hash: {}".format(returns[2][0], returns[2][1]))
+    print(name, "se encontra na tabela? número de acessos: {} e hash: {}".format(returns[3][0], returns[3][1]))
     print("-------------------------------------------------------------------------------NEXT")
