@@ -2,7 +2,11 @@ prime1 = 127
 prime2 = 7
 c1 = 0.5
 c2 = 0.5
-
+'''
+A funcao hornerHash une o nome e o sobrenome, 
+depois percorre a string letra por letra realizando somas e 
+multiplicacoes pelo metodo Horner
+'''
 def hornerHash(string,size):
     i = 0
     hash = 0
@@ -12,6 +16,12 @@ def hornerHash(string,size):
         i+=1
     return int(hash)
 
+'''
+A funcao fullNameHash separa o nome so sobrenome, 
+primeiro percorrendo letra por letra do nome realizando somas e 
+multiplicacoes pelo metodo Horner. Depois percorrendo letra por 
+letra do sobrenome da mesma forma
+'''
 def fullNameHash(string,size):
     name = string.split(' ')
     i = 0
@@ -26,6 +36,10 @@ def fullNameHash(string,size):
         i+=1
     return int(hash)
 
+'''
+A funcao insert_eabq se utiliza do metodo de resolucao de conflito Busca Quadradica 
+para inserir os nomes na tabela e lidar com possiveis colisoes. 
+'''
 def insert_eabq(hash,name,table,i,n):
 
     hash = int((hash + i*(c1 + c2*i)) % len(table))
@@ -41,6 +55,10 @@ def insert_eabq(hash,name,table,i,n):
                 break
     return n
 
+'''
+A funcao incert_chain se utiliza do metodo de Encadeamento para inserir os nomes 
+na tabela e lidar com possiveis colisoes
+'''
 def insert_chain(hash,name,table):
 
     for tuple in table:
@@ -51,6 +69,10 @@ def insert_chain(hash,name,table):
             table.append(list(tuple) + [name])
             break
 
+'''
+Funcao de busca que usa a funcao hornerHash para mapeamento de string e 
+metodo de resolucao de conflito Busca Quadratica
+'''
 def consulta_eabqH(name, table):
 
     hash = hornerHash(name, len(table))
@@ -65,6 +87,11 @@ def consulta_eabqH(name, table):
             return i+1
         i+=1
 
+
+'''
+Funcao de busca que usa a funcao fullNameHash para mapeamento de string e 
+metodo de resolucao de conflito Busca Quadratica
+'''
 def consulta_eabqFN(name, table):
 
     hash = fullNameHash(name, len(table))
@@ -78,7 +105,10 @@ def consulta_eabqFN(name, table):
         if tuple[0][1] == name:
             return i+1
         i+=1
-
+'''
+Funcao de busca que usa a funcao hornerHash para mapeamento de string e 
+metodo do Encadeamento para a resolucao de conflito 
+'''
 def consulta_chainH(name, table):
 
     hash = hornerHash(name, len(table))
@@ -89,6 +119,10 @@ def consulta_chainH(name, table):
                     return 1
     return -1
 
+'''
+Funcao de busca que usa a funcao fullNameHash para mapeamento de string e 
+metodo do Encadeamento para a resolucao de conflito
+'''
 def consulta_chainFN(name, table):
 
     hash = fullNameHash(name, len(table))
