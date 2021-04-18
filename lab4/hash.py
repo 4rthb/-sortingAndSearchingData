@@ -26,18 +26,20 @@ def fullNameHash(string,size):
         i+=1
     return int(hash)
 
-def insert_eabq(hash,name,table,i):
+def insert_eabq(hash,name,table,i,n):
 
     hash = int((hash + i*(c1 + c2*i)) % len(table))
     for tuple in table:
         if tuple[0] == hash:
             if tuple[1] != '\0' and tuple[1] != name:
-                insert_eabq(hash,name,table,i+1)
+                n+=1
+                insert_eabq(hash,name,table,i+1,n)
                 break
             else:
                 table.remove(tuple)
                 table.append((hash,name,1))
                 break
+    return n
 
 def insert_chain(hash,name,table):
 
@@ -53,25 +55,29 @@ def consulta_eabqH(name, table):
 
     hash = hornerHash(name, len(table))
     i = 0
-    while i<100:
+    end = hash
+    while True:
         hash = int((hash + i*(c1 + c2*i)) % len(table))
+        if hash == end and i>0:
+            return -1
         tuple = [ tup for tup in table if tup[0] == hash ]
         if tuple[0][1] == name:
-            return i+1, hash
+            return i+1
         i+=1
-    return -1, None
 
 def consulta_eabqFN(name, table):
 
     hash = fullNameHash(name, len(table))
     i = 0
-    while i<100:
+    end = hash
+    while True:
         hash = int((hash + i*(c1 + c2*i)) % len(table))
+        if hash == end and i>0:
+            return -1
         tuple = [ tup for tup in table if tup[0] == hash ]
         if tuple[0][1] == name:
-            return i+1, hash
+            return i+1
         i+=1
-    return -1, None
 
 def consulta_chainH(name, table):
 
@@ -80,8 +86,8 @@ def consulta_chainH(name, table):
         if tup[0] == hash:
             for names in tup[1:]:
                 if names == name:
-                    return 1, hash
-    return -1, None
+                    return 1
+    return -1
 
 def consulta_chainFN(name, table):
 
@@ -90,6 +96,6 @@ def consulta_chainFN(name, table):
         if tup[0] == hash:
             for names in tup[1:]:
                 if names == name:
-                    return 1, hash
-    return -1, None
+                    return 1
+    return -1
 
