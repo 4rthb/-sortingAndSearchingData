@@ -3,7 +3,7 @@ import trie
 import csv
 import time
 import re
-
+#fase 1
 files = ["minirating.csv", "movie_clean.csv", "tag_clean.csv"]
 buffer = []
 pattern = [re.compile('user (\d*)$'), re.compile('movie ([^\n]*)$'), re.compile('tags ([^\n]*)$'), re.compile('top(\d*) ([^\n]*)$')]
@@ -18,6 +18,7 @@ for file in files:
         buffer[files.index(file)] = list(csv.reader(csvfile))
         buffer[files.index(file)].remove(buffer[files.index(file)][0])
 
+#fase 2
 while True:
     inp = input("What do you want to do?\n(X) - Exit\n")
 
