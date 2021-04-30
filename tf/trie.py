@@ -1,11 +1,12 @@
 ''' 
+Estrutura: Arvore trie 
 Funções:
 inserir: insere novas palavras na arvore
 '''
 
 
 class TrieNode:
-    """um nodo numa estrutura arvore"""
+    '''um nodo numa estrutura arvore'''
 
     def __init__(self, char):
         # o caractere guardado no nodo
@@ -16,10 +17,15 @@ class TrieNode:
 
         # indica o id da palavra, decidido em ordem de chegada
         # (apenas quando is_end é verdade)
-        self.id = []
+        self.movieId = []
+
+        # genero do filme
+        '''NÃO SEI COMO COLAR, MAS QUERO QUE RECEBA UM VETOR DE STRINGS'''
+        self.gen = []
 
         # um dicionario para os nodos filhos
         # chaves são os caracteres, valores são nodos
+        '''NÃO SEI COMO COLOCAR, MAS QUERO QUE ELES RECEBAM A CLASSE TrieNose'''
         self.children = null          # igual a char
         self.children_left = null     # menor que char
         self.children_right = null    # maior que char
@@ -36,7 +42,7 @@ class Trie(object):
         """
         self.root = TrieNode("")
     
-    def insert(self, word, id):
+    def insert(self, word, movieId):
         """Inserir uma palavra na arvore"""
         node = self.root
         
@@ -63,12 +69,14 @@ class Trie(object):
                 else:                               # caso haja um nodo
                     #seguir a diante
                     node = node.children_right
-                    
+
         # marcar o fim da palavra
         node.is_end = True
 
-        node.id.append(id)
-        
+        node.movieId.append(movieId)
+
+'''   VER DEPOIS
+
     def dfs(self, node, prefix):
         """Depth-first traversal of the trie
         
@@ -106,3 +114,4 @@ class Trie(object):
 
         # Sort the results in reverse order and return
         return self.output
+'''
