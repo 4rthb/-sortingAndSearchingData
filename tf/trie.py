@@ -19,16 +19,22 @@ class TrieNode:
         # (apenas quando is_end é verdade)
         self.movieId = []
 
-        # genero do filme
-        '''NÃO SEI COMO COLAR, MAS QUERO QUE RECEBA UM VETOR DE STRINGS'''
-        self.gen = []
+        # # genero do filme
+        # '''NÃO SEI COMO COLAR, MAS QUERO QUE RECEBA UM VETOR DE STRINGS'''
+        # self.gen = []
+        # self.gen.append(["roberto"])
+        # print(self.gen)
+        # > "roberto"
+        # self.gen.append(["carlos","rispido"])
+        # print(self.gen)
+        # > "roberto", "carlos", "rispido"
 
         # um dicionario para os nodos filhos
         # chaves são os caracteres, valores são nodos
         '''NÃO SEI COMO COLOCAR, MAS QUERO QUE ELES RECEBAM A CLASSE TrieNose'''
-        self.children = null          # igual a char
-        self.children_left = null     # menor que char
-        self.children_right = null    # maior que char
+        self.children = None          # igual a char
+        self.children_left = None     # menor que char
+        self.children_right = None    # maior que char
 
 
 
@@ -52,7 +58,7 @@ class Trie(object):
             if char == node.char:                   # caso seja igual
                 node = node.children[char]
             if char < node.char:                    # caso seja menor que char
-                if node.children_left == null:      # caso não tenha um nodo 
+                if node.children_left == None:      # caso não tenha um nodo
                     # criar um novo nodo
                     new_node = TrieNode(char)
                     node.children_left = new_node
@@ -61,7 +67,7 @@ class Trie(object):
                     #seguir a diante
                     node = node.children_left
             if char  > node.char:                   # caso seja maior que char
-                if node.children_right == null:     # caso não tenha um nodo 
+                if node.children_right == None:     # caso não tenha um nodo
                     # criar um novo nodo
                     new_node = TrieNode(char)
                     node.children_right = new_node

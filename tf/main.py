@@ -3,15 +3,14 @@ import trie
 import csv
 import time
 import re
+
 #fase 1
-files = ["minirating.csv", "movie_clean.csv", "tag_clean.csv"]
+files = ["rating.csv", "movie_clean.csv", "tag_clean.csv"]
 buffer = []
 pattern = [re.compile('user (\d*)$'), re.compile('movie ([^\n]*)$'), re.compile('tags ([^\n]*)$'), re.compile('top(\d*) ([^\n]*)$')]
 
 for i in range(len(files)):
     buffer.append([])
-
-t0 = time.process_time()
 
 for file in files:
     with open(file, newline='') as csvfile:
@@ -36,6 +35,9 @@ while True:
     elif pattern[3].search(inp): #top nth from genre
         n = int(pattern[3].search(inp).group(1))
         genre = eval(pattern[3].search(inp).group(2))
+
+        for num in range(n):
+            pass
     else:
         print("Invalid command, try again.")
 print("Goodbye! :)")
