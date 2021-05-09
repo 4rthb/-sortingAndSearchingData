@@ -6,18 +6,18 @@ Funções:
     - insert: insere novas palavras na arvore
     - search: pesquisa palavras na trie
 */
+
+/*fase 1*/
 struct TrieNode 
 {
    //um nodo numa estrutura arvore
-    char key;                //caractere a ser guardado
-    bool is_end;        //caso o nodo seja o fim da palavra
-    int movieId;                //idica o id da palavra, apenas quando 
+    char key;                           //caractere a ser guardado
+    bool is_end;                        //caso o nodo seja o fim da palavra
+    int movieId;                        //idica o id da palavra, apenas quando 
     struct TrieNode *children;          //igual a char 
     struct TrieNode *children_left;     //menor que char
     struct TrieNode *children_right;    //maior que char
 };
-
-using namespace std;
 
 // retorna um novo nodo (inicializado com nulls)
 struct TrieNode *novoNode(char char_key)
@@ -74,8 +74,10 @@ void insert(struct TrieNode *root, string word, int movieId)
     pNode->movieId = movieId;
 }
   
-// retorna true caso encontre a string
-bool search(struct TrieNode *root, string word)
+
+/*fase 2*/
+// retorna o nodo que aponta para o fim do nome ou prefixo dado na pesquisa
+TrieNode* search(struct TrieNode *root, string word)
 {
     struct TrieNode *pNode = root;
   
@@ -109,6 +111,38 @@ bool search(struct TrieNode *root, string word)
             }
         }
     }
-    return pNode->is_end;
+    return pNode;
 }
   
+//um nodo da lista encadeada movieId
+struct MovieList
+{
+    int movieId;                            //idica o id da palavra 
+    struct MovieList *next;                 //proximo id
+};
+
+// retorna um novo nodo (inicializado com nulls)
+struct MovieList *newNode(int movieId)
+{
+    struct MovieList *pNode =  new MovieList;
+    pNode->movieId = movieId;               //idica o id da palavra 
+    pNode->next = NULL;                     //proximo id
+
+    return pNode;
+}
+
+/* 
+função:
+recebe: ponteiro do nodo final da pesquisa e end da lista encadeada onde colocara os movieId encontrados 
+*/
+void movie_found(TrieNode *pNode, MovieList *pList)
+{
+    if(pNode->is_end)
+    {//caso o nodo seja o fim de uma palavra 
+            pList = newNode(pNode->movieId);            //criar nodo novo e colocar o movieId
+            pList = pList->next;                        //segue para o proximo nodo        
+    }    
+    movie_found(pNode->children_left, pList);
+    movie_found(pNode->children, pList);
+    movie_found(pNode->children_right, pList);
+}
