@@ -1,197 +1,81 @@
+#include <bits/stdc++.h>
+#include <string>
+
+using namespace std;
+/*
+Estrutura: Tabela Hash
+Funções:
+   - inserit: insere novos nodos 
+   - search: pesquisa
+*/
+
+/*fase 1*/
+struct ListNodeTitle
+{
+    //nodo da lista encadeada
+    bool full = false;          //caso já tenha sido preenchida
+    int movieId;                //
+    string title;
+    string genres[];              //genero
+    float ratingTotal;
+    float rating;
+    int count;          
+    int date;                   //data da avaliação 
+    ListNodeTitle next;
+}
 
 
-// #include <bits/stdc++.h>
-// #include <string>
+struct ListNodeTitle *newNodoTitle(int movieId, string title, string genres[], float rating, int date)
+{
+    //retorna um novo nodo (inicializado com null)
+    struct ListNodeTitle *pNode =  new ListNodeTitle;
+    bool full = true;
+    pNode->movieId = movieId;
+    pNode->title = title;
+    pNode->genres = genres;
+    pNode->ratingTotal = rating;
+    pNode->rating = rating;
+    pNode->count = 1;
+    pNode->date = date;
+    pNode->next = NULL;
 
-// using namespace std;
+    return pNode;
+}
+int Hash (int movieId, int size)
+{
+    // funcao hash que mapeia a chave
+    return (movieId % size);
+}
+// inserir um item na tabela
+void insertTitle(ListNodeTitle *pLista[], int movieId, string title, string genres[], float rating, int size);
+{
+    int index;
+    ListaNodeTitle pNode*;                                              //nodo livre
+    //calcula hash
+    index = Hash(movieId, size);
 
-// class HashU
-// {
-//     int size;   
-  
-//     // Pointer to an array 
-//     vector<vector<vector<string>>> table;
-// public:
-//     HashU(int V);  // Constructor
-  
-//     // inserts a key into hash table
-//     void insertItem(vector<string> &user);
-  
-//     // hash function to map values to key
-//     int hashFunction(vector<string> &user) {
-//         return (stoi(user[0]) % size);
-//     }
-  
-//     void displayHash();
-// };
-
-// class HashT
-// {
-//     int size;   
-  
-//     // Pointer to an array 
-//     list<int> *table;
-// public:
-//     HashT(int V);  // Constructor
-  
-//     // inserts a key into hash table
-//     void insertItem(string tag);
-  
-//     // deletes a key from hash table
-//     void deleteItem(string tag);
-  
-//     // hash function to map values to key
-//     int hashFunction(string tag) {
-//         int i = 0, hash = 0;
-
-//         for(auto& c : tag){
-//             if(c != ' '){
-//                 hash = (int(c) + 127 * hash) % size;    
-//             }
-//         }
-//         return int(hash);
-//     }
-  
-//     void displayHash();
-// };
-
-// class HashM
-// {
-//     int size;   
-  
-//     // Pointer to an array 
-//     list<int> *table;
-// public:
-//     HashM(int V);  // Constructor
-  
-//     // inserts a movieId into hash table
-//     void insertItem(int movieId);
-  
-//     // deletes a movieId from hash table
-//     void deleteItem(int movieId);
-  
-//     // hash function to map values to movieId
-//     int hashFunction(int movieId) {
-//         return (movieId % size);
-//     }
-  
-//     void displayHash();
-// };
-  
-// HashU::HashU(int b)
-// {
-//     this->size = b;
-// }
-  
-// void HashU::insertItem(vector<vector<string>> &user)
-// {
-//     int tag = 0;
-//     int index = hashFunction(user);
-//     if (table[index].size()>0){
-//         for(<vector<string>> node, int i =0; i<table.size(); i++){
-//             if(node[0].compare(user[0])){
-//                 node.push_back(user[1])
-//                 node.push_back(user[2])
-//                 tag = 1;
-//             }
-
-//         }
-//         if(!tag){
-//           table[index].push_back()
-//         }
-//     }
-//     table[index].push_back(userId); 
-// }
-  
-// // function to display hash table
-// void HashU::displayHash() {
-//   for (int i = 0; i < size; i++) {
-//     cout << i;
-//     for (auto x : table[i])
-//       cout << " --> " << x;
-//     cout << endl;
-//   }
-// }
-
-// HashT::HashT(int b)
-// {
-//     this->size = b;
-//     table = new list<int>[size];
-// }
-  
-// void HashT::insertItem(string tag)
-// {
-//     int index = hashFunction(tag);
-//     table[index].push_back(tag); 
-// }
-  
-// void HashT::deleteItem(string tag)
-// {
-//   // get the hash index of key
-//   int index = hashFunction(tag);
-  
-//   // find the key in (inex)th list
-//   list <int> :: iterator i;
-//   for (i = table[index].begin();
-//            i != table[index].end(); i++) {
-//     // if (*i == tag)
-//       break;
-//   }
-  
-//   // if key is found in hash table, remove it
-//   if (i != table[index].end())
-//     table[index].erase(i);
-// }
-  
-// // function to display hash table
-// void HashT::displayHash() {
-//   for (int i = 0; i < size; i++) {
-//     cout << i;
-//     for (auto x : table[i])
-//       cout << " --> " << x;
-//     cout << endl;
-//   }
-// }
-
-// HashM::HashM(int b)
-// {
-//     this->size = b;
-//     table = new list<int>[size];
-// }
-  
-// void HashM::insertItem(int key)
-// {
-//     int index = hashFunction(key);
-//     table[index].push_back(key); 
-// }
-  
-// void HashM::deleteItem(int key)
-// {
-//   // get the hash index of key
-//   int index = hashFunction(key);
-  
-//   // find the key in (inex)th list
-//   list <int> :: iterator i;
-//   for (i = table[index].begin();
-//            i != table[index].end(); i++) {
-//     if (*i == key)
-//       break;
-//   }
-  
-//   // if key is found in hash table, remove it
-//   if (i != table[index].end())
-//     table[index].erase(i);
-// }
-  
-// // function to display hash table
-// void HashM::displayHash() {
-//   for (int i = 0; i < size; i++) {
-//     cout << i;
-//     for (auto x : table[i])
-//       cout << " --> " << x;
-//     cout << endl;
-//   }
-// }
+    //procura filme na lista encadeada
+    if (pLista[index]->full == false)
+    {//caso não exista nodo
+        pLista[index] = newNodoTitle(movieId, title, genres, rating);   //cria um novo nodo
+        return;                                                         //fim da inserção
+    }
+    pNode = pLista[index];                                              //ponteiro livre recebe end da lista 
+    while(pNode)
+    {//enquanto não chegar ao fim da lista
+        if(pNode->movieId == movieId)                                   
+        {//caso seja o nodo do filme, recalcular rating
+            pNode->ratingTotal = pNode->ratingTotal + rating;           //soma o total de rating
+            pNode->count = pNode->count + 1;                            //soma mais um ao numero de ratings
+            pNode->rating = pNode->ratingTotal / pNode->count;          //recalcula o rating médio
+            return;                                                     //fim da inserção
+        }
+        pNode = pNode->next;                                            //move para o seguinte
+    }
+    //chegou ao fim da lista
+    pNodo = newNodoTitle(movieId, title, genres, rating);               //cria um novo nodo
+    return;                                                             //fim da inserção
+}
 
 /////////////////////////////////////////////////////////////////////////
 

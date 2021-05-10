@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-
+using namespace std;
 /*
 Estrutura: Arvore trie 
 Funções:
@@ -137,12 +137,16 @@ recebe: ponteiro do nodo final da pesquisa e end da lista encadeada onde colocar
 */
 void movie_found(TrieNode *pNode, MovieList *pList)
 {
-    if(pNode->is_end)
-    {//caso o nodo seja o fim de uma palavra 
+    if (pNode)
+    {
+        if(pNode->is_end)
+        {//caso o nodo seja o fim de uma palavra 
             pList = newNode(pNode->movieId);            //criar nodo novo e colocar o movieId
             pList = pList->next;                        //segue para o proximo nodo        
-    }    
-    movie_found(pNode->children_left, pList);
-    movie_found(pNode->children, pList);
-    movie_found(pNode->children_right, pList);
+        }    
+        movie_found(pNode->children_left, pList);
+        movie_found(pNode->children, pList);
+        movie_found(pNode->children_right, pList);
+    }
+    return;
 }
