@@ -12,34 +12,44 @@ using namespace std;
 
 int main(void){
 
-    vector<float> size;
-    regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
+    vector<int> size, movies;
+    regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgx5("year (\\d*)$"),
+            rgxAux("\\'(.*?)\\'"), rgxAux2("\\s(\\d{4})");
     ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
     bool first = true;
     int hash;
     string todo, split, noquote, genre, n;
     smatch matches;
+    TrieNode *tree = novoNode(' ');
+    char wo[]= "Hate ";
 
     // fase 1
 
-    for (auto& row : parser1){
+    for (auto& row : parser1){                       // userId,movieId,rating,timestamp
         if (first)                                   // pula o header do arquivo
             { first = false; continue; }
-    }
-    first = true;
-    for (auto& row : parser2){
-        if (first)
-            { first = false; continue; }
-    }
-    first = true;
-    for (auto& row : parser3){
-        if (first)
-            { first = false; continue; }
-    }
 
+    }
+    first = true;
+    for (auto& row : parser2){                       //"movieId","title","genres"
+        if (first)
+            { first = false; continue; }
+        char * tab = new char [row[1].length()+1];
+        strcpy (tab, row[1].c_str());
+        insert(&tree, tab, stoi(row[0]));
+    }
+    first = true;
+    for (auto& row : parser3){                       //"userId","movieId","tag","timestamp"
+        if (first)
+            { first = false; continue; }
+    }
     // fase 2
 
+    get_all_ids(search(tree, wo), movies);
+    for(auto& mov : movies){
+        std::cout << mov << "\n";
+    }
     while(true){
         std::cout << "What do you want to do?\n(X) - Exit\n";
         getline(cin,todo);
@@ -71,6 +81,9 @@ int main(void){
             for(int j = 0; j < stoi(n); j++){
                 std::cout << j;
             }
+        }
+        else if(regex_match(todo, matches, rgx5)){
+            std::cout << matches[1];
         }
         else{
             std::cout << "Invalid command, try again.\n";

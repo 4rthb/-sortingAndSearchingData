@@ -22,10 +22,10 @@ struct TrieNode
 // retorna um novo nodo (inicializado com nulls)
 struct TrieNode *novoNode(char char_key)
 {
-    struct TrieNode *pNode =  new TrieNode;
+    struct TrieNode *pNode =  (struct TrieNode*) malloc(sizeof( struct TrieNode ));
     pNode->key = char_key;
     pNode->is_end = false;
-    pNode->movieId = NULL;
+    pNode->movieId = -1;
     pNode->children = NULL;
     pNode->children_left = NULL;
     pNode->children_right = NULL;
@@ -35,118 +35,74 @@ struct TrieNode *novoNode(char char_key)
   
 // caso não exista, inserir chave
 // se existe, marcar a o nodo com o movieId
-void insert(struct TrieNode *root, string word, int movieId)
+void insert(struct TrieNode** root, char *word, int movieId)
 {
-    struct TrieNode *pNode = root;                      //recebe ponteiro para raiz
-    char char_key;                                      //recebe a chave
-    for (int i = 0; i < word.length(); i++)             //percorre a palavra 
+    // Base Case: Tree is empty
+    if (!(*root))
+        *root = novoNode(*word);
+  
+    // If current character of word is smaller than root's character,
+    // then insert this word in left subtree of root
+    if ((*word) < (*root)->key)
+        insert(&( (*root)->children_left ), word, movieId);
+  
+    // If current character of word is greate than root's character,
+    // then insert this word in right subtree of root
+    else if ((*word) > (*root)->key)
+        insert(&( (*root)->children_right ), word, movieId);
+  
+    // If current character of word is same as root's character,
+    else
     {
-        char_key = word[i];                             //recebe o char na posicao i
-        if (pNode == NULL)                              //caso o nodo não exita 
-        {
-            pNode = novoNode(char_key);                 //criar nodo novo
-            pNode = pNode->children;                    //segue para o proximo nodo        
-        }    
-        else                                            //caso o nodo exista
-        {
-            if (char_key == pNode->key)                 //caso o char for igual a chave do nodo
-            {
-                pNode = pNode->children;                //segue para o proximo nodo 
-            }
-            else
-            {
-                if (char_key < pNode->key)              //caso o char for menor que a chave do nodo
-                {      
-                    pNode = pNode->children_left;       //segue para o proximo nodo
-                }
-                else
-                {
-                    if (char_key > pNode->key)          //caso o char for maior que a chave do nodo 
-                    {   
-                        pNode = pNode->children_right;  //segue para o proximo nodo
-                    }
-                }                
-            }
-        }
+        if (*(word+1))
+            insert(&( (*root)->children ), word+1,movieId);
+  
+        // the last character of the word
+        else
+            (*root)->is_end = true;
+            (*root)->movieId = movieId;
+
     }
-    // marcar fim da palavra
-    pNode->is_end = true;
-    pNode->movieId = movieId;
 }
   
 
 /*fase 2*/
 // retorna o nodo que aponta para o fim do nome ou prefixo dado na pesquisa
-TrieNode* search(struct TrieNode *root, string word)
+TrieNode* search(struct TrieNode *root, char *word)
 {
-    struct TrieNode *pNode = root;
+    if (!root)
+        return NULL;
   
-    char char_key;                                      //recebe a chave
-    for (int i = 0; i < word.length(); i++)             //percorre a palavra 
+    if (*word < (root)->key)
+        return search(root->children_left, word);
+  
+    else if (*word > (root)->key)
+        return search(root->children_right, word);
+  
+    else
     {
-        char_key = word[i];                             //recebe o char na posicao i
-        if (pNode == NULL)                              //caso o nodo não exita 
-        {
-            break;
-        }    
-        else                                            //caso o nodo exista
-        {
-            if (char_key == pNode->key)                 //caso o char for igual a chave do nodo
-            {
-                pNode = pNode->children;                //segue para o proximo nodo 
-            }
-            else
-            {
-                if (char_key < pNode->key)              //caso o char for menor que a chave do nodo
-                {      
-                    pNode = pNode->children_left;       //segue para o proximo nodo
-                }
-                else
-                {
-                    if (char_key > pNode->key)          //caso o char for maior que a chave do nodo 
-                    {   
-                        pNode = pNode->children_right;  //segue para o proximo nodo
-                    }
-                }                
-            }
-        }
-    }
-    return pNode;
-}
+        if (*(word+1) == '\0')
+            return root;
   
-//um nodo da lista encadeada movieId
-struct MovieList
-{
-    int movieId;                            //idica o id da palavra 
-    struct MovieList *next;                 //proximo id
-};
-
-// retorna um novo nodo (inicializado com nulls)
-struct MovieList *newNode(int movieId)
-{
-    struct MovieList *pNode =  new MovieList;
-    pNode->movieId = movieId;               //idica o id da palavra 
-    pNode->next = NULL;                     //proximo id
-
-    return pNode;
+        return search(root->children, word+1);
+    }
 }
 
-/* 
-função:
-recebe: ponteiro do nodo final da pesquisa e end da lista encadeada onde colocara os movieId encontrados 
-*/
-void movie_found(TrieNode *pNode, MovieList *pList)
-{
-    if (pNode)
-    {
-        if(pNode->is_end)
-        {//caso o nodo seja o fim de uma palavra 
-            pList = newNode(pNode->movieId);            //criar nodo novo e colocar o movieId
-            pList = pList->next;                        //segue para o proximo nodo        
-        }    
-        movie_found(pNode->children_left, pList);
-        movie_found(pNode->children, pList);
-        movie_found(pNode->children_right, pList);
+// preenche lista de filmes com todos os filhos do nodo passado
+void get_all_ids(struct TrieNode *node, vector<int> &movies){
+    if(node->is_end==true){
+        movies.push_back(node->movieId);
     }
-    return;
+    if (!node){
+        return;
+    }
+    if(node->children){
+        get_all_ids(node->children, movies);
+    }
+    if(node->children_right){
+        get_all_ids(node->children_right, movies);
+    }
+    if(node->children_left){
+        get_all_ids(node->children_left, movies);
+    }
 }
