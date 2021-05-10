@@ -87,7 +87,7 @@ TrieNode* search(struct TrieNode *root, string word)
         char_key = word[i];                             //recebe o char na posicao i
         if (pNode == NULL)                              //caso o nodo não exita 
         {
-            return false;
+            break;
         }    
         else                                            //caso o nodo exista
         {

@@ -16,16 +16,16 @@ struct ListNodeTitle
     bool full = false;          //caso já tenha sido preenchida
     int movieId;                //
     string title;
-    string genres[];              //genero
+    vector<string> genres;              //genero
     float ratingTotal;
     float rating;
     int count;          
     int date;                   //data da avaliação 
-    ListNodeTitle next;
-}
+    ListNodeTitle* next;
+};
 
 
-struct ListNodeTitle *newNodoTitle(int movieId, string title, string genres[], float rating, int date)
+struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> genres, float rating, int date)
 {
     //retorna um novo nodo (inicializado com null)
     struct ListNodeTitle *pNode =  new ListNodeTitle;
@@ -47,17 +47,17 @@ int Hash (int movieId, int size)
     return (movieId % size);
 }
 // inserir um item na tabela
-void insertTitle(ListNodeTitle *pLista[], int movieId, string title, string genres[], float rating, int size);
+void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, float rating, int size)
 {
     int index;
-    ListaNodeTitle pNode*;                                              //nodo livre
+    ListNodeTitle *pNode;                                              //nodo livre
     //calcula hash
     index = Hash(movieId, size);
 
     //procura filme na lista encadeada
     if (pLista[index]->full == false)
     {//caso não exista nodo
-        pLista[index] = newNodoTitle(movieId, title, genres, rating);   //cria um novo nodo
+        pLista[index] = newNodoTitle(movieId, title, genres, rating, size);   //cria um novo nodo
         return;                                                         //fim da inserção
     }
     pNode = pLista[index];                                              //ponteiro livre recebe end da lista 
@@ -73,7 +73,7 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, string genr
         pNode = pNode->next;                                            //move para o seguinte
     }
     //chegou ao fim da lista
-    pNodo = newNodoTitle(movieId, title, genres, rating);               //cria um novo nodo
+    pNode = newNodoTitle(movieId, title, genres, rating, size);               //cria um novo nodo
     return;                                                             //fim da inserção
 }
 
