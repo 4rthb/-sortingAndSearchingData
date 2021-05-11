@@ -24,6 +24,37 @@ struct ListNodeTitle
     ListNodeTitle* next;
 };
 
+struct movieRatings
+{          
+    vector<int> movieId;                
+    vector<float> rating;     
+};
+
+struct ListNodeUser
+{
+    //nodo da lista encadeada
+    bool full = false;          //caso já tenha sido preenchida
+    int userId; 
+    movieRatings ls;            
+    ListNodeUser* next;
+};
+
+struct ListNodeTag
+{
+    //nodo da lista encadeada
+    bool full = false;          //caso já tenha sido preenchida
+    string tag;
+    int movieId;                   //data da avaliação 
+    ListNodeTag* next;
+};
+
+struct ListNodeGenre
+{
+    //nodo da lista encadeada
+    bool full = false;          //caso já tenha sido preenchida
+    int movieId;                   //data da avaliação 
+    ListNodeGenre* next;
+};
 
 struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> genres, float rating, int date)
 {
@@ -41,13 +72,13 @@ struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> gen
 
     return pNode;
 }
-int Hash (int movieId, int size)
+int Hash(int Id, int size)
 {
     // funcao hash que mapeia a chave
-    return (movieId % size);
+    return (int)(Id % size);
 }
 // inserir um item na tabela
-void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, float rating, int size)
+void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, float rating, int date, int size)
 {
     int index;
     ListNodeTitle *pNode;                                              //nodo livre
@@ -57,7 +88,7 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     //procura filme na lista encadeada
     if (pLista[index]->full == false)
     {//caso não exista nodo
-        pLista[index] = newNodoTitle(movieId, title, genres, rating, size);   //cria um novo nodo
+        pLista[index] = newNodoTitle(movieId, title, genres, rating, date);   //cria um novo nodo
         return;                                                         //fim da inserção
     }
     pNode = pLista[index];                                              //ponteiro livre recebe end da lista 
@@ -77,61 +108,75 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     return;                                                             //fim da inserção
 }
 
-/////////////////////////////////////////////////////////////////////////
+ListNodeTitle* searchTitle(ListNodeTitle *pLista[], int movieId, int size){
+    int hash = Hash(movieId, size);
+    ListNodeTitle* aux = pLista[hash];
+    
+    do{
+        if(aux->movieId==movieId){
+            return aux;
+        }
+        aux=aux->next;
+    }while(aux);
+    return NULL;
+}
 
-// #include <vector>
-// #include <string>
+struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
+{
+    //retorna um novo nodo (inicializado com null)
+    struct ListNodeUser *pNode =  new ListNodeUser;
+    bool full = true;
+    pNode->userId = userId;
+    pNode->next=NULL;
+    return pNode;
+}
+// inserir um item na tabela
+void insertUser(ListNodeUser *pLista[], int movieId, float rating, int userId, int size)
+{
+    int index;
+    ListNodeUser *pNode;                                              //nodo livre
+    //calcula hash
+    index = Hash(userId, size);
 
-// int hashingUM(int n, int size){
-//     return int(n%size);
-// }
+    if (pLista[index]->full == false)
+    {//caso não exista nodo
+        pLista[index] = newNodoUser(movieId, rating, userId);   
+        return;                                                       
+    }
+    pNode = pLista[index];                                             
+    while(pNode)
+    {
+        if(pNode->userId == userId)                                   
+        {
+            pNode->ls.movieId.push_back(movieId);   
+            pNode->ls.rating.push_back(rating);    
+            return;                                                     //fim da inserção
+        }
+        pNode = pNode->next;                                            //move para o seguinte
+    }
+    //chegou ao fim da lista
+    pNode = newNodoUser(movieId, rating, userId);               //cria um novo nodo
+    return;                                                             //fim da inserção
+}
 
-// int hashingT(string tag, int size){
-//     int i = 0, hash = 0;
+ListNodeUser* searchUser(ListNodeUser *pLista[], int userId, int size){
+    int hash = Hash(userId, size);
+    ListNodeUser* aux = pLista[hash];
+    
+    do{
+        if(aux->userId==userId){
+            return aux;
+        }
+        aux=aux->next;
+    }while(aux);
+    return NULL;
+}
 
-//     for(auto& c : tag){
-//         if(c != ' '){
-//             hash = (int(c) + 127 * hash) % size;    
-//         }
-//     }
-//     return int(hash);
-// }
+int HashWord(string word, int size){
+    int hash = 0;
+    for(auto& c : word){
+        hash = (int(c) + 127 * hash) % size; 
+    }
+    return int(hash);
+}
 
-// int insertChainUT(int hash, std::vector<std::string> tuple, std::vector<std::vector<std::string>> table){
-//     int tag = 0;
-
-//     for(auto& node : table){
-//         if (stoi(node[0]) == hash){
-//             for(auto& subnode : node){
-//                 if(subnode == tuple[0]){
-
-//                 }
-//             }
-//         }
-//     }
-// }
-
-// int insertChainM(int hash, std::vector<std::string> tuple, std::vector<std::vector<std::string>> table){
-//     int tag = 0;
-
-//     for(auto& node : table){
-//         if (stoi(node[0]) == hash){
-//             if(node.size()>2){
-//                 for(auto&)
-//             }
-//         }
-//     }
-// }
-
-// std::vector<std::string> searchChainUM(int id, std::vector<std::vector<std::string>> table, int size){
-//     int hash = hashingUM(id,size);
-
-//     for(auto& node : table){
-//         if (stoi(node[0]) == hash){
-//                 if(id == stoi(node[1]])){
-                    
-//                 }
-//             }
-//         }
-//     }
-// }
