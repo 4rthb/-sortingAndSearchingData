@@ -89,7 +89,7 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     ListNodeTitle *pNode;                                                       //nodo livre
     //calcula hash
     index = Hash(movieId, size);
-
+    
     //procura filme na lista encadeada
     if (pLista[index]->full == false)
     {//caso não exista nodo
@@ -111,6 +111,17 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     //chegou ao fim da lista
     pNode = newNodoTitle(movieId, title, genres, rating, size);                 //cria um novo nodo
     return;                                                                     //fim da inserção
+}
+
+void updateTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, int date, int size){
+    int hash = Hash(movieId,size);
+
+
+    if(pLista[hash] && pLista[hash]->date!=-1){
+        pLista[hash]->genres=genres;
+        pLista[hash]->title=title;
+        pLista[hash]->date=date;
+    }
 }
 
 ListNodeTitle* searchTitle(ListNodeTitle *pLista[], int movieId, int size){
