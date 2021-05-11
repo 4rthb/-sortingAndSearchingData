@@ -44,7 +44,7 @@ struct ListNodeTag
     //nodo da lista encadeada
     bool full = false;          //caso já tenha sido preenchida
     string tag;
-    int movieId[];                
+    vector<int> movieId;                
     ListNodeTag* next;
 };
 
@@ -52,7 +52,7 @@ struct ListNodeGenre
 {
     //nodo da lista encadeada
     bool full = false;          //caso já tenha sido preenchida
-    int movieId[];                 
+    vector<int> movieId;                 
     ListNodeGenre* next;
 };
 
