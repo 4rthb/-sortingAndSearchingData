@@ -6,6 +6,7 @@
 #include "./libs/parser.hpp"
 #include "./libs/hash.hpp"
 #include "./libs/trie.hpp"
+#include <typeinfo>
 
 using namespace aria::csv;
 using namespace std;
@@ -22,7 +23,6 @@ int main(void){
     string todo, split, noquote, genre, n;
     smatch matches;
     TrieNode *tree = novoNode(' ');
-    char wo[]= "Hate ";
 
     // fase 1
 
@@ -45,11 +45,6 @@ int main(void){
             { first = false; continue; }
     }
     // fase 2
-
-    get_all_ids(search(tree, wo), movies);
-    for(auto& mov : movies){
-        std::cout << mov << "\n";
-    }
     while(true){
         std::cout << "What do you want to do?\n(X) - Exit\n";
         getline(cin,todo);
@@ -61,7 +56,20 @@ int main(void){
             std::cout << matches[1];
         }
         else if(regex_match(todo, matches, rgx2)){   //movie search
-            std::cout << matches[1];
+            noquote = matches[1].str() + " ";
+            char *mov = &noquote[0];
+            TrieNode *subtree = search(tree, mov);
+            if(subtree){
+                get_all_ids(subtree, movies);
+                for(auto& mov : movies){
+                    std::cout << mov << "\n";
+                }
+                movies.clear();
+            }
+            else{
+                std::cout << "Couldn't find match for the given preffix or name.\nPlease try again.\n";
+            }
+
         }
         else if(regex_match(todo, matches, rgx3)){   //tag search
             split = matches[1];
@@ -82,7 +90,7 @@ int main(void){
                 std::cout << j;
             }
         }
-        else if(regex_match(todo, matches, rgx5)){
+        else if(regex_match(todo, matches, rgx5)){   //year search
             std::cout << matches[1];
         }
         else{
