@@ -17,7 +17,7 @@ int main(void){
             rgxAux("\\'(.*?)\\'"), rgxAux2("\\s(\\d{4})"), rgAux3("\"|\\|(\\w+)\"|\\|");
     ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
-    vector<int> movies, sizes = {int(sizeof(parser1)/sizeof(CsvParser)), int(sizeof(parser1)/sizeof(CsvParser)), int(sizeof(parser2)/sizeof(CsvParser)), 
+    vector<int> movies, sizes = { 1 , 1000000, int(sizeof(parser2)/sizeof(CsvParser)), 
                                 int(sizeof(parser3)/sizeof(CsvParser))};
     bool first = true;
     int hash, id, date;
@@ -27,22 +27,24 @@ int main(void){
     TrieNode *tree = novoNode(' ');
     ListNodeGenre *genTable[sizes[2]];
     ListNodeTag *tagTable[sizes[2]];
-    ListNodeTitle *titleTable[sizes[1]];
-    ListNodeUser *userTable[sizes[0]];
+    ListNodeTitle *titleTable[sizes[0]], *aux;
+    ListNodeUser *userTable[sizes[1]];
     vector<string> genres;
 
     // fase 1
-    
 
     for (auto& row : parser1){                       // userId,movieId,rating,timestamp
         if (first)                                   // pula o header do arquivo
             { first = false; continue; }
-            id = stoi(row[1]);
-            rating = stof(row[2]);
-            insertTitle(titleTable, id, "", genres, rating, -1, sizes[0]);
-            insertUser(userTable, id, rating, stoi(row[0]), sizes[1]);
+        id = stoi(row[1]);
+        rating = stof(row[2]);
+        insertTitle(titleTable, id, "", genres, rating, -1, sizes[0]);
+        insertUser(userTable, id, rating, stoi(row[0]), sizes[1]);
     }
     first = true;
+    for(int j = 0; j < sizes[0]; j++){
+        std::cout << titleTable[j]->movieId << "\n";
+    }
     for (auto& row : parser2){                       //"movieId","title","genres"
         if (first)
             { first = false; continue; }
@@ -51,7 +53,11 @@ int main(void){
         strcpy (tab, row[1].c_str());
         insert(&tree, tab, id);
 
-        if(titleTable[Hash(id,sizes[0])]->date!=-1){
+        aux=titleTable[Hash(id,sizes[0])];
+        while(titleTable[Hash(id,sizes[0])]->next!=NULL && titleTable[Hash(id,sizes[0])]->movieId!=id){
+            aux = titleTable[Hash(id,sizes[0])]->next;
+        }
+        if(aux->movieId==id && aux->date==-1){
             regex_match(row[1], matches, rgxAux2);
             date = stoi(matches[1]);
             regex_match(row[2], matches, rgAux3);
@@ -59,6 +65,9 @@ int main(void){
                 genres.push_back(matches[i]);
             }
             updateTitle(titleTable, id, row[1], genres, date, sizes[0]);
+            for(auto& gen : genres){
+                insertGenre(genTable,id,gen,sizes[2]);
+            }
             genres.clear();
         }
     }
