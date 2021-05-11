@@ -60,7 +60,7 @@ struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> gen
 {
     //retorna um novo nodo (inicializado com null)
     struct ListNodeTitle *pNode =  new ListNodeTitle;
-    bool full = true;
+    pNode->full = true;
     pNode->movieId = movieId;
     pNode->title = title;
     pNode->genres = genres;
@@ -125,9 +125,11 @@ struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
 {
     //retorna um novo nodo (inicializado com null)
     struct ListNodeUser *pNode =  new ListNodeUser;
-    bool full = true;
+    pNode->full = true;
     pNode->userId = userId;
     pNode->next=NULL;
+    pNode->ls.movieId.push_back(movieId);
+    pNode->ls.rating.push_back(rating);
     return pNode;
 }
 // inserir um item na tabela
@@ -172,6 +174,8 @@ ListNodeUser* searchUser(ListNodeUser *pLista[], int userId, int size){
     return NULL;
 }
 
+
+
 int HashWord(string word, int size){
     int hash = 0;
     for(auto& c : word){
@@ -180,3 +184,53 @@ int HashWord(string word, int size){
     return int(hash);
 }
 
+struct ListNodeTag* newNodoTag(int movieId, string tag)
+{
+    //retorna um novo nodo (inicializado com null)
+    struct ListNodeTag *pNode =  new ListNodeTag;
+    pNode->full = true;
+    pNode->next=NULL;
+    pNode->movieId.push_back(movieId);
+    pNode->tag=tag;
+    return pNode;
+}
+// inserir um item na tabela
+void insertTag(ListNodeTag *pLista[], int movieId, string tag, int size)
+{
+    int index;
+    ListNodeTag *pNode;                                              //nodo livre
+    //calcula hash
+    index = HashWord(tag, size);
+
+    if (pLista[index]->full == false)
+    {//caso não exista nodo
+        pLista[index] = newNodoTag(movieId, tag);   
+        return;                                                       
+    }
+    pNode = pLista[index];                                             
+    while(pNode)
+    {
+        if(!pNode->tag.compare(tag))                                   
+        {
+            pNode->movieId.push_back(movieId);      
+            return;                                                     //fim da inserção
+        }
+        pNode = pNode->next;                                            //move para o seguinte
+    }
+    //chegou ao fim da lista
+    pNode = newNodoTag(movieId, tag);               //cria um novo nodo
+    return;                                                             //fim da inserção
+}
+
+ListNodeTag* searchTag(ListNodeTag *pLista[], string tag, int size){
+    int hash = HashWord(tag, size);
+    ListNodeTag* aux = pLista[hash];
+    
+    do{
+        if(!aux->tag.compare(tag)){
+            return aux;
+        }
+        aux=aux->next;
+    }while(aux);
+    return NULL;
+}
