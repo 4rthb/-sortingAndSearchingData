@@ -29,6 +29,7 @@ int main(void){
     ListNodeTag *tagTable[sizes[2]];
     ListNodeTitle *titleTable[sizes[0]], *aux;
     ListNodeUser *userTable[sizes[1]];
+    strMovie *movieStr = NULL;                      //estrutura filme
     vector<string> genres;
 
     // fase 1
@@ -38,8 +39,9 @@ int main(void){
             { first = false; continue; }
         id = stoi(row[1]);
         rating = stof(row[2]);
-        insertTitle(titleTable, id, "", genres, rating, -1, sizes[0]);
-        insertUser(userTable, id, rating, stoi(row[0]), sizes[1]);
+        movieStr = newMovie(id, "", genres, rating, -1);    //salva infos na estrutura do filme
+        insertTitle(titleTable, movieStr, sizes[0]);        //recebe estrutura
+        insertUser(userTable, movieStr, rating, stoi(row[0]), sizes[1]);
     }
     first = true;
     for(int j = 0; j < sizes[0]; j++){
