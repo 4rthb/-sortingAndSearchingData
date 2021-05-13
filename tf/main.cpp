@@ -6,10 +6,11 @@
 #include "./libs/parser.hpp"
 #include "./libs/hash.hpp"
 #include "./libs/trie.hpp"
-#include <typeinfo>
+#include <chrono>
 
 using namespace aria::csv;
 using namespace std;
+using namespace std::chrono;
 
 void swap(ListNodeTitle* a, ListNodeTitle* b)
 {
@@ -90,8 +91,8 @@ void movieSearch(ListNodeTitle *titleTable[], string genre, int n, int size, str
     for(int k = 0; k < size; k++){
         aux = titleTable[k];
         do{
-            // for(int l=0; l<aux->genres.size() && aux->count>1000; l++){
-            for(int l=0; l<aux->genres.size(); l++){
+            for(int l=0; l<aux->genres.size() && aux->count>1000; l++){
+            // for(int l=0; l<aux->genres.size(); l++){
                 if(!genre.compare(aux->genres[l])){
                     movies.push_back(*aux);
                 }
@@ -133,11 +134,11 @@ int main(void){
 
     regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgx5("year (\\d*)$"), 
             rgx6("shit(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
-    ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
+    ifstream f1("./data/rating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
     vector<int> movies, sizes = { 105000 , 180000, 50666 };
     bool first = true;
-    int hash, id, date, pos, tam, auxI;
+    int hash, id, date, pos, tam, auxI, colWidth = 15;
     float rating;
     string todo, split, noquote, genre, n;
     smatch matches;
@@ -146,6 +147,7 @@ int main(void){
     ListNodeTitle *titleTable[sizes[0]], *aux;
     ListNodeUser *userTable[sizes[1]], *aux2;
     vector<string> genres, tags;
+    auto start = high_resolution_clock::now();
 
     // fase 1
     for(int u = 0; u<sizes[0]; u++){
@@ -183,7 +185,11 @@ int main(void){
             noquote = row[1];
             noquote.erase(0,row[1].size()-5);
             noquote.erase(noquote.size()-1,1);
-            date = stoi(noquote);
+            try{
+                date = stoi(noquote);
+            } catch(invalid_argument e){
+                date = 0;
+            }
             noquote = row[2];
 
             tam = 0;
@@ -205,6 +211,10 @@ int main(void){
             { first = false; continue; }
         insertTag(tagTable, stoi(row[1]), row[2], sizes[2]);
     }
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Tempo de pre-processamento: " << (float)duration.count()/1000000 << " segundos"<< endl;
 
     // fase 2
     while(true){
