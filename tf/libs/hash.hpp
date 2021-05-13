@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 #include <string>
 
-#define N1 105000 
-#define N2 180000
-#define N3 50666
+#define N1 105019 
+#define N2 180001
+#define N3 50671
 using namespace std;
 /*
 Estrutura: Tabela Hash
