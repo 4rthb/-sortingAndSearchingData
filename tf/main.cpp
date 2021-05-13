@@ -160,7 +160,7 @@ int main(void){
             rgx6("shit(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
     ifstream f1("./data/rating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
-    vector<int> movies, sizes = { 105000 , 180000, 50666 };
+    vector<int> movies, sizes = { 105019 , 180001, 50671 };
     bool first = true;
     int hash, id, date, pos, tam, auxI, colWidth = 15;
     float rating;
