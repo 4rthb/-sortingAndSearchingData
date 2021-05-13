@@ -11,21 +11,132 @@
 using namespace aria::csv;
 using namespace std;
 
+void swap(ListNodeTitle* a, ListNodeTitle* b)
+{
+    ListNodeTitle t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int partition (vector<ListNodeTitle> arr, int low, int high)
+{
+    int pivot = arr[high].ratingTotal;
+    int i = (low - 1);
+ 
+    for (int j = low; j <= high- 1; j++)
+    {
+        if (arr[j].ratingTotal <= pivot)
+        {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+void quickSort(vector<ListNodeTitle> arr, int low, int high)
+{
+    if (low < high)
+    {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int partitionR (vector<ListNodeTitle> arr, int low, int high)
+{
+    int pivot = arr[high].ratingTotal;
+    int i = (low - 1);
+ 
+    for (int j = low; j <= high- 1; j++)
+    {
+        if (arr[j].ratingTotal >= pivot)
+        {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+void quickSortR(vector<ListNodeTitle> arr, int low, int high)
+{
+    if (low < high)
+    {
+        int pi = partitionR(arr, low, high);
+        quickSortR(arr, low, pi - 1);
+        quickSortR(arr, pi + 1, high);
+    }
+}
+
+void printn(vector<ListNodeTitle> movies, int n){
+    std::cout << "Title |   Genres  |   Rating  |   Count\n";
+    for(int h = 0; h < n; h++){
+        std::cout << movies[h].title << "   |   ";
+        for(auto& gen : movies[h].genres){
+            std::cout << gen << "|";
+        }
+        std::cout << "  |   " << movies[h].ratingTotal << " |   " << movies[h].count << "\n"; 
+    }
+}
+
+void movieSearch(ListNodeTitle *titleTable[], string genre, int n, int size, string type){
+    ListNodeTitle *aux;
+    vector<ListNodeTitle> movies;
+
+    for(int k = 0; k < size; k++){
+        aux = titleTable[k];
+        do{
+            for(int l=0; l<aux->genres.size() && aux->count>1000; l++){
+                if(!genre.compare(aux->genres[l])){
+                    movies.push_back(*aux);
+                }
+            }
+            aux=aux->next;
+        }while(aux != NULL);
+    }
+    if(!type.compare("shit")){
+        quickSortR(movies, 0, movies.size()-1);
+    }
+    else{
+        quickSort(movies, 0, movies.size()-1);
+    }
+    printn(movies,n);
+}
+
+void yearSearch(ListNodeTitle *titleTable[], int year, int size){
+    ListNodeTitle *aux;
+
+    std::cout << "movieId   |   Title |   Ratingt\n";
+    for(int g = 0; g < size; g++){
+        aux = titleTable[g];
+        do{
+            if(aux->date==year){
+                std::cout << aux->movieId << "  |   ";
+                std::cout << aux->title << "  |   ";
+                std::cout << aux->ratingTotal << "  |   " << "\n";
+            }
+            aux=aux->next;
+        }while(aux != NULL);
+    }
+}
+
 int main(void){
 
-    regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgx5("year (\\d*)$"),
-            rgxAux("\\'(.*?)\\'"), rgxAux2("\\s(\\d{4})"), rgAux3("\"|\\|(\\w+)\"|\\|");
+    regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgx5("year (\\d*)$"), 
+            rgx6("shittiest(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'"), rgxAux2("\\s(\\d{4})"), rgAux3("\"|\\|(\\w+)\"|\\|");
     ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
-    vector<int> movies, sizes = { 1 , 1000000, int(sizeof(parser2)/sizeof(CsvParser)), 
-                                int(sizeof(parser3)/sizeof(CsvParser))};
+    vector<int> movies, sizes = { 1000000 , 1000000, 1000000 };
     bool first = true;
     int hash, id, date;
     float rating;
     string todo, split, noquote, genre, n;
     smatch matches;
     TrieNode *tree = novoNode(' ');
-    ListNodeGenre *genTable[sizes[2]];
     ListNodeTag *tagTable[sizes[2]];
     ListNodeTitle *titleTable[sizes[0]], *aux;
     ListNodeUser *userTable[sizes[1]];
@@ -65,9 +176,6 @@ int main(void){
                 genres.push_back(matches[i]);
             }
             updateTitle(titleTable, id, row[1], genres, date, sizes[0]);
-            for(auto& gen : genres){
-                insertGenre(genTable,id,gen,sizes[2]);
-            }
             genres.clear();
         }
     }
@@ -116,15 +224,18 @@ int main(void){
             }
         }
         else if(regex_match(todo, matches, rgx4)){   //top nth from genre
-            std::cout << matches[1] << "|" << matches[2] << "\n";
             genre = matches[2];
             n = matches[1];
-            for(int j = 0; j < stoi(n); j++){
-                std::cout << j;
-            }
+            movieSearch(titleTable, genre, stoi(n), sizes[0], "not");
         }
         else if(regex_match(todo, matches, rgx5)){   //year search
-            std::cout << matches[1];
+            yearSearch(titleTable, stoi(matches[1]),  sizes[0]);
+        }
+        else if(regex_match(todo, matches, rgx6)){  //shittiest search
+            genre = matches[2];
+            n = matches[1];
+            movieSearch(titleTable, genre, stoi(n), sizes[0], "shit");
+
         }
         else{
             std::cout << "Invalid command, try again.\n";

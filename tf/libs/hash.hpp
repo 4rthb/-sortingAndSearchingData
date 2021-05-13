@@ -49,15 +49,6 @@ struct ListNodeTag
     ListNodeTag* next;
 };
 
-struct ListNodeGenre
-{//estrutura para pesquisa de geneno 
-    //nodo da lista encadeada
-    bool full = false;          //caso já tenha sido preenchida
-    string genre;
-    vector<int> movieId;                 
-    ListNodeGenre* next;
-};
-
 //****************************TITULO******************************
 int Hash(int Id, int size)
 {
@@ -68,7 +59,7 @@ int Hash(int Id, int size)
 struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> genres, float rating, int date)
 {
     //retorna um novo nodo (inicializado com null)
-    struct ListNodeTitle *pNode =  new ListNodeTitle;
+    ListNodeTitle *pNode =  new ListNodeTitle();
     pNode->full = true;
     pNode->movieId = movieId;
     pNode->title = title;
@@ -83,7 +74,7 @@ struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> gen
 }
 
 // inserir um item na tabela
-void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, float rating, int date, int size)
+void insertTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vector<string> genres, float rating, int date, int size)
 {
     int index;
     ListNodeTitle *pNode;                                                       //nodo livre
@@ -113,7 +104,7 @@ void insertTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     return;                                                                     //fim da inserção
 }
 
-void updateTitle(ListNodeTitle *pLista[], int movieId, string title, vector<string> genres, int date, int size){
+void updateTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vector<string> genres, int date, int size){
     int hash = Hash(movieId,size);
 
 
@@ -124,7 +115,7 @@ void updateTitle(ListNodeTitle *pLista[], int movieId, string title, vector<stri
     }
 }
 
-ListNodeTitle* searchTitle(ListNodeTitle *pLista[], int movieId, int size){
+ListNodeTitle* searchTitle(ListNodeTitle *pLista[1000000], int movieId, int size){
     //realiza pesquisa pelo titulo, um titulo por vez
     int hash = Hash(movieId, size);         //calcula hash
     ListNodeTitle* aux = pLista[hash];      //ponteiro que aponta para nodo da lista encadeada
@@ -142,7 +133,7 @@ ListNodeTitle* searchTitle(ListNodeTitle *pLista[], int movieId, int size){
 struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
 {
     //retorna um novo nodo (inicializado com null)
-    struct ListNodeUser *pNode =  new ListNodeUser;
+    ListNodeUser *pNode =  new ListNodeUser();
     pNode->full = true;
     pNode->userId = userId;
     pNode->next=NULL;
@@ -151,7 +142,7 @@ struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
     return pNode;
 }
 
-void insertUser(ListNodeUser *pLista[], int movieId, float rating, int userId, int size)
+void insertUser(ListNodeUser *pLista[1000000], int movieId, float rating, int userId, int size)
 {//inserir User na tabela
     int index;
     ListNodeUser *pNode;                                        //nodo livre
@@ -180,7 +171,7 @@ void insertUser(ListNodeUser *pLista[], int movieId, float rating, int userId, i
     return;                                                     //fim da inserção
 }
 
-ListNodeUser* searchUser(ListNodeUser *pLista[], int userId, int size){
+ListNodeUser* searchUser(ListNodeUser *pLista[1000000], int userId, int size){
     //realiza pesquisa de user
     int hash = Hash(userId, size);
     ListNodeUser* aux = pLista[hash];
@@ -207,7 +198,7 @@ int HashWord(string word, int size){
 struct ListNodeTag* newNodoTag(int movieId, string tag)
 {
     //retorna um novo nodo (inicializado com null)
-    struct ListNodeTag *pNode =  new ListNodeTag;
+    ListNodeTag *pNode =  new ListNodeTag();
     pNode->full = true;
     pNode->next=NULL;
     pNode->movieId.push_back(movieId);
@@ -215,7 +206,7 @@ struct ListNodeTag* newNodoTag(int movieId, string tag)
     return pNode;
 }
 
-void insertTag(ListNodeTag *pLista[], int movieId, string tag, int size)
+void insertTag(ListNodeTag *pLista[1000000], int movieId, string tag, int size)
 {// inserir um item na tabela
     int index;
     ListNodeTag *pNode;                                              //nodo livre
@@ -248,58 +239,6 @@ ListNodeTag* searchTag(ListNodeTag *pLista[], string tag, int size){
     
     do{
         if(!aux->tag.compare(tag)){
-            return aux;
-        }
-        aux=aux->next;
-    }while(aux);
-    return NULL;
-}
-
-//****************************GENERO******************************
-struct ListNodeGenre* newNodoGenre(int movieId, string genre)
-{
-    //retorna um novo nodo (inicializado com null)
-    struct ListNodeGenre *pNode =  new ListNodeGenre;
-    pNode->full = true;
-    pNode->next=NULL;
-    pNode->movieId.push_back(movieId);
-    pNode->genre = genre;
-    return pNode;
-}
-
-void insertGenre(ListNodeGenre *pLista[], int movieId, string genre, int size)
-{// inserir um item na tabela
-    int index;
-    ListNodeGenre *pNode;                                              //nodo livre
-    //calcula hash
-    index = HashWord(genre, size);
-
-    if (pLista[index]->full == false)
-    {//caso não exista nodo
-        pLista[index] = newNodoGenre(movieId, genre);   
-        return;                                                       
-    }
-    pNode = pLista[index];                                             
-    while(pNode)
-    {
-        if(!pNode->genre.compare(genre))                                   
-        {
-            pNode->movieId.push_back(movieId);      
-            return;                                                     //fim da inserção
-        }
-        pNode = pNode->next;                                            //move para o seguinte
-    }
-    //chegou ao fim da lista
-    pNode = newNodoGenre(movieId, genre);                               //cria um novo nodo
-    return;                                                             //fim da inserção
-}
-
-ListNodeGenre* searchGenre(ListNodeGenre *pLista[], string genre, int size){
-    int hash = HashWord(genre, size);
-    ListNodeGenre* aux = pLista[hash];
-    
-    do{
-        if(!aux->genre.compare(genre)){
             return aux;
         }
         aux=aux->next;
