@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 #include <string>
 
+#define N1 10000 
+#define N2 1000
+#define N3 1000
 using namespace std;
 /*
 Estrutura: Tabela Hash
@@ -51,16 +54,16 @@ struct ListNodeTag
 
 //****************************TITULO******************************
 int Hash(int Id, int size)
-{
+{   
     // funcao hash que mapeia a chave
     return (int)(Id % size);
 }
 
-struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> genres, float rating, int date)
+struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> genres, float rating, int date, bool full)
 {
     //retorna um novo nodo (inicializado com null)
     ListNodeTitle *pNode =  new ListNodeTitle();
-    pNode->full = true;
+    pNode->full = full;
     pNode->movieId = movieId;
     pNode->title = title;
     pNode->genres = genres;
@@ -74,7 +77,7 @@ struct ListNodeTitle* newNodoTitle(int movieId, string title, vector<string> gen
 }
 
 // inserir um item na tabela
-void insertTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vector<string> genres, float rating, int date, int size)
+void insertTitle(ListNodeTitle *pLista[N1], int movieId, string title, vector<string> genres, float rating, int date, int size)
 {
     int index;
     ListNodeTitle *pNode;                                                       //nodo livre
@@ -84,7 +87,7 @@ void insertTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vect
     //procura filme na lista encadeada
     if (pLista[index]->full == false)
     {//caso não exista nodo
-        pLista[index] = newNodoTitle(movieId, title, genres, rating, date);     //cria um novo nodo
+        pLista[index] = newNodoTitle(movieId, title, genres, rating, date, true);     //cria um novo nodo
         return;                                                                 //fim da inserção
     }
     pNode = pLista[index];                                                      //ponteiro livre recebe end da lista 
@@ -100,11 +103,11 @@ void insertTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vect
         pNode = pNode->next;                                                    //move para o seguinte
     }
     //chegou ao fim da lista
-    pNode = newNodoTitle(movieId, title, genres, rating, size);                 //cria um novo nodo
+    pNode = newNodoTitle(movieId, title, genres, rating, size, true);                 //cria um novo nodo
     return;                                                                     //fim da inserção
 }
 
-void updateTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vector<string> genres, int date, int size){
+void updateTitle(ListNodeTitle *pLista[N1], int movieId, string title, vector<string> genres, int date, int size){
     int hash = Hash(movieId,size);
 
 
@@ -115,7 +118,7 @@ void updateTitle(ListNodeTitle *pLista[1000000], int movieId, string title, vect
     }
 }
 
-ListNodeTitle* searchTitle(ListNodeTitle *pLista[1000000], int movieId, int size){
+ListNodeTitle* searchTitle(ListNodeTitle *pLista[10000], int movieId, int size){
     //realiza pesquisa pelo titulo, um titulo por vez
     int hash = Hash(movieId, size);         //calcula hash
     ListNodeTitle* aux = pLista[hash];      //ponteiro que aponta para nodo da lista encadeada
@@ -130,11 +133,11 @@ ListNodeTitle* searchTitle(ListNodeTitle *pLista[1000000], int movieId, int size
 }
 
 //****************************USER*****************************
-struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
+struct ListNodeUser* newNodoUser(int movieId, float rating, int userId, bool full)
 {
     //retorna um novo nodo (inicializado com null)
     ListNodeUser *pNode =  new ListNodeUser();
-    pNode->full = true;
+    pNode->full = full;
     pNode->userId = userId;
     pNode->next=NULL;
     pNode->ls.movieId.push_back(movieId);   //move a lista de filmes
@@ -142,7 +145,7 @@ struct ListNodeUser* newNodoUser(int movieId, float rating, int userId)
     return pNode;
 }
 
-void insertUser(ListNodeUser *pLista[1000000], int movieId, float rating, int userId, int size)
+void insertUser(ListNodeUser *pLista[10000], int movieId, float rating, int userId, int size)
 {//inserir User na tabela
     int index;
     ListNodeUser *pNode;                                        //nodo livre
@@ -151,7 +154,7 @@ void insertUser(ListNodeUser *pLista[1000000], int movieId, float rating, int us
 
     if (pLista[index]->full == false)
     {//caso não exista nodo
-        pLista[index] = newNodoUser(movieId, rating, userId);   
+        pLista[index] = newNodoUser(movieId, rating, userId, true);   
         return;                                                       
     }
     //caso exista nodo
@@ -167,11 +170,11 @@ void insertUser(ListNodeUser *pLista[1000000], int movieId, float rating, int us
         pNode = pNode->next;                                    //move para o seguinte, caso não encontre
     }
     //chegou ao fim da lista
-    pNode = newNodoUser(movieId, rating, userId);               //cria um novo nodo
+    pNode = newNodoUser(movieId, rating, userId, true);               //cria um novo nodo
     return;                                                     //fim da inserção
 }
 
-ListNodeUser* searchUser(ListNodeUser *pLista[1000000], int userId, int size){
+ListNodeUser* searchUser(ListNodeUser *pLista[10000], int userId, int size){
     //realiza pesquisa de user
     int hash = Hash(userId, size);
     ListNodeUser* aux = pLista[hash];
@@ -195,18 +198,18 @@ int HashWord(string word, int size){
     return int(hash);
 }
 
-struct ListNodeTag* newNodoTag(int movieId, string tag)
+struct ListNodeTag* newNodoTag(int movieId, string tag, bool full)
 {
     //retorna um novo nodo (inicializado com null)
     ListNodeTag *pNode =  new ListNodeTag();
-    pNode->full = true;
+    pNode->full = full;
     pNode->next=NULL;
     pNode->movieId.push_back(movieId);
     pNode->tag=tag;
     return pNode;
 }
 
-void insertTag(ListNodeTag *pLista[1000000], int movieId, string tag, int size)
+void insertTag(ListNodeTag *pLista[10000], int movieId, string tag, int size)
 {// inserir um item na tabela
     int index;
     ListNodeTag *pNode;                                              //nodo livre
@@ -215,7 +218,7 @@ void insertTag(ListNodeTag *pLista[1000000], int movieId, string tag, int size)
 
     if (pLista[index]->full == false)
     {//caso não exista nodo
-        pLista[index] = newNodoTag(movieId, tag);   
+        pLista[index] = newNodoTag(movieId, tag, true);   
         return;                                                       
     }
     pNode = pLista[index];                                             
@@ -229,11 +232,11 @@ void insertTag(ListNodeTag *pLista[1000000], int movieId, string tag, int size)
         pNode = pNode->next;                                            //move para o seguinte
     }
     //chegou ao fim da lista
-    pNode = newNodoTag(movieId, tag);               //cria um novo nodo
+    pNode = newNodoTag(movieId, tag, true);               //cria um novo nodo
     return;                                                             //fim da inserção
 }
 
-ListNodeTag* searchTag(ListNodeTag *pLista[], string tag, int size){
+ListNodeTag* searchTag(ListNodeTag *pLista[10000], string tag, int size){
     int hash = HashWord(tag, size);
     ListNodeTag* aux = pLista[hash];
     
