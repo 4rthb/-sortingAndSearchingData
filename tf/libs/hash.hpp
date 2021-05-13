@@ -110,8 +110,7 @@ void insertTitle(ListNodeTitle *pLista[N1], int movieId, string title, vector<st
 void updateTitle(ListNodeTitle *pLista[N1], int movieId, string title, vector<string> genres, int date, int size){
     int hash = Hash(movieId,size);
 
-
-    if(pLista[hash] && pLista[hash]->date!=-1){
+    if(pLista[hash] && pLista[hash]->date==-1){
         pLista[hash]->genres=genres;
         pLista[hash]->title=title;
         pLista[hash]->date=date;
@@ -211,7 +210,7 @@ struct ListNodeTag* newNodoTag(int movieId, string tag, bool full)
 
 void insertTag(ListNodeTag *pLista[10000], int movieId, string tag, int size)
 {// inserir um item na tabela
-    int index;
+    int index, is=0;
     ListNodeTag *pNode;                                              //nodo livre
     //calcula hash
     index = HashWord(tag, size);
@@ -226,7 +225,14 @@ void insertTag(ListNodeTag *pLista[10000], int movieId, string tag, int size)
     {
         if(!pNode->tag.compare(tag))                                   
         {
-            pNode->movieId.push_back(movieId);      
+            for(int i=0; i < pNode->movieId.size(); i++){
+                if(pNode->movieId[i] == movieId){
+                    is = 1;
+                }
+            }
+            if(!is){
+                pNode->movieId.push_back(movieId);      
+            }
             return;                                                     //fim da inserção
         }
         pNode = pNode->next;                                            //move para o seguinte

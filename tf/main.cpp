@@ -79,7 +79,7 @@ void printn(vector<ListNodeTitle> movies, int n){
         for(auto& gen : movies[h].genres){
             std::cout << gen << "|";
         }
-        std::cout << "  |   " << movies[h].ratingTotal << " |   " << movies[h].count << "\n"; 
+        std::cout << "  |   " << movies[h].rating << " |   " << movies[h].count << "\n"; 
     }
 }
 
@@ -110,14 +110,14 @@ void movieSearch(ListNodeTitle *titleTable[], string genre, int n, int size, str
 void yearSearch(ListNodeTitle *titleTable[], int year, int size){
     ListNodeTitle *aux;
 
-    std::cout << "movieId   |   Title |   Ratingt\n";
+    std::cout << "movieId   |   Title |   Rating\n";
     for(int g = 0; g < size; g++){
         aux = titleTable[g];
         do{
             if(aux->date==year){
                 std::cout << aux->movieId << "  |   ";
                 std::cout << aux->title << "  |   ";
-                std::cout << aux->ratingTotal << "  |   " << "\n";
+                std::cout << aux->rating << "  |   " << "\n";
             }
             aux=aux->next;
         }while(aux != NULL);
@@ -137,11 +137,10 @@ int main(void){
     string todo, split, noquote, genre, n;
     smatch matches;
     TrieNode *tree = novoNode(' ');
-    ListNodeTag *tagTable[sizes[2]];
+    ListNodeTag *tagTable[sizes[2]], *aux3;
     ListNodeTitle *titleTable[sizes[0]], *aux;
-    ListNodeUser *userTable[sizes[1]];
-    vector<string> genres;
-    size_t pos =0;
+    ListNodeUser *userTable[sizes[1]], *aux2;
+    vector<string> genres, tags;
 
     // fase 1
     for(int u = 0; u<sizes[0]; u++){
@@ -181,7 +180,7 @@ int main(void){
             noquote.erase(noquote.size()-1,1);
             date = stoi(noquote);
             noquote = row[2];
-            std::cout << noquote << "\n";
+            // std::cout << noquote << "\n";
             // while ((pos = noquote.find('|')) != string::npos) {
             //     noquote = noquote.substr(0, pos);
             //     std::cout << noquote << std::endl;
@@ -196,8 +195,9 @@ int main(void){
     for (auto& row : parser3){                       //"userId","movieId","tag","timestamp"
         if (first)
             { first = false; continue; }
-        // insertTag(tagTable, stoi(row[1]), row[2], sizes[2]);
+        insertTag(tagTable, stoi(row[1]), row[2], sizes[2]);
     }
+
     // fase 2
     while(true){
         std::cout << "What do you want to do?\n(X) - Exit\n";
@@ -207,16 +207,45 @@ int main(void){
             break;
         }
         else if(regex_match(todo, matches, rgx1)){   //user ratings
-            std::cout << matches[1];
+            // hash = Hash(stoi(matches[1].str()),sizes[1]);
+            // for(int i = 0; i < userTable[hash]->ls.movieId.size(); i++){
+            //     std::cout << userTable[hash]->ls.rating[i] << "     ";
+            //     aux = searchTitle(titleTable,userTable[hash]->ls.movieId[i], sizes[0]);
+            //     std::cout << aux->title << "    " << aux->ratingTotal << "  " << aux->count << "\n" 
+            // }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // aux2 = searchUser(userTable, stoi(matches[1].str()), sizes[1]);
+            // if(aux2){
+            //     std::cout << "Rating        Title       Global      Count";
+            //     for(int i = 0; i < aux2->ls.movieId.size(); i++){
+            //         aux = searchTitle(titleTable, aux2->ls.movieId[i], sizes[0]);
+            //         std::cout << userTable[hash]->ls.rating[i] << "     ";
+            //         std::cout << aux->title << "    " << aux->rating << "  " << aux->count << "\n"; 
+            //     }
+            // }
+            // else{
+            //     std::cout << "No user found!\n";
+            // }
         }
         else if(regex_match(todo, matches, rgx2)){   //movie search
             noquote = matches[1].str() + " ";
             char *mov = &noquote[0];
             TrieNode *subtree = search(tree, mov);
             if(subtree){
+                std::cout << "  movieId   |       title       |       genres      | ratings |   count   \n";
                 get_all_ids(subtree, movies);
                 for(auto& mov : movies){
                     std::cout << mov << "\n";
+                    // aux = searchTitle(titleTable, mov, sizes[0]);
+                    // std::cout << aux->movieId << "  " << aux->title << "    ";
+                    // for(int i = 0; i<aux->genres.size(); i++){
+                    //     std::cout << aux->genres[i];
+                    //     if(i!=aux->genres.size()-1){
+                    //         std::cout << "|";
+                    //     }
+                    // }
+                    // std::cout << "  " << aux->rating << "   " << aux->count << "\n";
                 }
                 movies.clear();
             }
@@ -232,22 +261,41 @@ int main(void){
                 noquote = matches[0];
                 noquote.erase(0,1);
                 noquote.erase(noquote.size()-1,1);
-                std::cout << noquote << std::endl;
+                tags.push_back(noquote);
                 split = matches.suffix();
+            }
+            std::cout << "      title       |       genres      |   rating  |   count   \n";
+            for(int i = 0; i < tags.size(); i++){
+                aux3 = searchTag(tagTable, tags[i], sizes[2]);
+                if(aux3){
+                    for(int j = 0; j < aux3->movieId.size(); j++){
+                        aux = searchTitle(titleTable, aux3->movieId[j], sizes[0]);
+                        if(aux){
+                            std::cout << aux->title << "    |   ";
+                            for(int l = 0; l < aux->genres.size(); l++){
+                                std::cout << aux->genres[l];
+                                if(l != aux->genres.size()-1){
+                                    std::cout << "|";
+                                }
+                            }
+                            std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
+                        }
+                    }
+                }
             }
         }
         else if(regex_match(todo, matches, rgx4)){   //top nth from genre
             genre = matches[2];
             n = matches[1];
-            // movieSearch(titleTable, genre, stoi(n), sizes[0], "not");
+            movieSearch(titleTable, genre, stoi(n), sizes[0], "not");
         }
         else if(regex_match(todo, matches, rgx5)){   //year search
-            // yearSearch(titleTable, stoi(matches[1]),  sizes[0]);
+            yearSearch(titleTable, stoi(matches[1]),  sizes[0]);
         }
         else if(regex_match(todo, matches, rgx6)){  //shittiest search
             genre = matches[2];
             n = matches[1];
-            // movieSearch(titleTable, genre, stoi(n), sizes[0], "shit");
+            movieSearch(titleTable, genre, stoi(n), sizes[0], "shit");
 
         }
         else{
