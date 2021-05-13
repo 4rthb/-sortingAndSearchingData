@@ -74,13 +74,27 @@ void quickSortR(vector<ListNodeTitle>& arr, int low, int high)
 }
 
 void printn(vector<ListNodeTitle> movies, int n){
-    std::cout << "      Title     |       Genres    |   Rating  |   Count \n";
+    string genre;
+    int colWidth = 15;
+
+    cout << setfill('*') << setw(12*colWidth) << "*" << endl;
+    cout << setfill(' ') << fixed;
+    cout << setw(6*colWidth) << "Title" << setw(3*colWidth) << "Genres" << setw(colWidth) << "Ratings"
+            << setw(colWidth) << "Count" << endl;
+    cout << setfill('*') << setw(12*colWidth) << "*" << endl; 
+    cout << setfill(' ') << fixed;
+    // std::cout << "      Title     |       Genres    |   Rating  |   Count \n";
+    
     for(int h = 0; h < n; h++){
-        std::cout << movies[h].title << "   |   ";
+        genre.clear();
+        // std::cout << movies[h].title << "   |   ";
         for(auto& gen : movies[h].genres){
-            std::cout << gen << "|";
+            genre+=gen+"|";
+            // std::cout << gen << "|";
         }
-        std::cout << "  |   " << movies[h].rating << " |   " << movies[h].count << "\n"; 
+        // std::cout << "  |   " << movies[h].rating << " |   " << movies[h].count << "\n"; 
+        cout << setw(6*colWidth) << movies[h].title << setw(3*colWidth) << genre << setw(colWidth) << setprecision(2) << movies[h].rating
+            << setw(colWidth) << movies[h].count << endl;
     }
 }
 
@@ -115,15 +129,25 @@ void movieSearch(ListNodeTitle *titleTable[], string genre, int n, int size, str
 
 void yearSearch(ListNodeTitle *titleTable[], int year, int size){
     ListNodeTitle *aux;
+    int colWidth = 15;
 
-    std::cout << "movieId   |   Title |   Rating\n";
+    cout << setfill('*') << setw(10*colWidth) << "*" << endl;
+    cout << setfill(' ') << fixed;
+    cout << setw(colWidth) << "MovieId" << setw(6*colWidth) << "Title" << setw(colWidth) << "Ratings" << setw(colWidth) << "Count" << endl;
+    cout << setfill('*') << setw(10*colWidth) << "*" << endl; 
+    cout << setfill(' ') << fixed;
+
+    // std::cout << "movieId   |   Title |   Rating\n";
     for(int g = 0; g < size; g++){
         aux = titleTable[g];
         do{
             if(aux->date==year){
-                std::cout << aux->movieId << "  |   ";
-                std::cout << aux->title << "  |   ";
-                std::cout << aux->rating << "  |   " << "\n";
+                cout << setw(colWidth) << aux->movieId << setw(6*colWidth) << aux->title << setw(colWidth) << setprecision(2) << aux->rating
+            << setw(colWidth) << aux->count << endl;
+
+                // std::cout << aux->movieId << "  |   ";
+                // std::cout << aux->title << "  |   ";
+                // std::cout << aux->rating << "  |   " << "\n";
             }
             aux=aux->next;
         }while(aux != NULL);
@@ -227,11 +251,20 @@ int main(void){
         else if(regex_match(todo, matches, rgx1)){   //user ratings
             aux2 = searchUser(userTable, stoi(matches[1].str()), sizes[1]);
             if(aux2){
-                std::cout << "  Rating    |       Title       |       Global  |   Count   \n";
+                cout << setfill('*') << setw(10*colWidth) << "*" << endl;
+                cout << setfill(' ') << fixed;
+                cout << setw(colWidth) << "Rating" << setw(6*colWidth) << "Title" << setw(colWidth) << "Global" << setw(colWidth) << "Count" << endl;
+                cout << setfill('*') << setw(10*colWidth) << "*" << endl; 
+                cout << setfill(' ') << fixed; 
+                
+                // std::cout << "  Rating    |       Title       |       Global  |   Count   \n";
                 for(int i = 0; i < aux2->ls.movieId.size(); i++){
                     aux = searchTitle(titleTable, aux2->ls.movieId[i], sizes[0]);
-                    std::cout << aux2->ls.rating[i] << "    |   ";
-                    std::cout << aux->title << "    |   " << aux->rating << "   |   " << aux->count << "\n"; 
+                    cout << setprecision(1) << setw(colWidth) << aux2->ls.rating[i] << setw(6*colWidth) << aux->title << setw(colWidth) << setprecision(2)
+                     << aux->rating << setw(colWidth) << aux->count << endl; 
+
+                    // std::cout << aux2->ls.rating[i] << "    |   ";
+                    // std::cout << aux->title << "    |   " << aux->rating << "   |   " << aux->count << "\n"; 
                 }
             }
             else{
@@ -243,19 +276,31 @@ int main(void){
             char *mov = &noquote[0];
             TrieNode *subtree = search(tree, mov);
             if(subtree){
-                std::cout << "  movieId   |       title       |       genres      | ratings |   count   \n";
+                cout << setfill('*') << setw(13*colWidth) << "*" << endl;
+                cout << setfill(' ') << fixed;
+                cout << setw(colWidth) << "MovieId" << setw(6*colWidth) << "Title" << setw(3*colWidth) << "Genres" << setw(colWidth) << "Ratings"
+                        << setw(colWidth) << "Count" << endl;
+                cout << setfill('*') << setw(13*colWidth) << "*" << endl; 
+                cout << setfill(' ') << fixed;
+
+                // std::cout << "  movieId   |       title       |       genres      | ratings |   count   \n";
                 get_all_ids(subtree, movies);
                 for(auto& mov : movies){
                     aux = searchTitle(titleTable, mov, sizes[0]);
                     if(aux){
-                        std::cout << aux->movieId << "  |   " << aux->title << "    |   ";
+                        cout << setw(colWidth) << aux->movieId << setw(6*colWidth) << aux->title << setw(3*colWidth);
+                        genre.clear();
+                        // std::cout << aux->movieId << "  |   " << aux->title << "    |   ";
                         for(int i = 0; i<aux->genres.size(); i++){
-                            std::cout << aux->genres[i];
+                            genre += aux->genres[i];
+                            // std::cout << aux->genres[i];
                             if(i!=aux->genres.size()-1){
-                                std::cout << "|";
+                                genre += "|";
                             }
                         }
-                        std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
+                        cout << genre << setw(colWidth) << aux->rating << setw(colWidth) << aux->count << endl;
+                        genre.clear();
+                        // std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
                     }
                 }
                 movies.clear();
@@ -275,21 +320,34 @@ int main(void){
                 tags.push_back(noquote);
                 split = matches.suffix();
             }
-            std::cout << "      title       |       genres      |   rating  |   count   \n";
+                cout << setfill('*') << setw(12*colWidth) << "*" << endl;
+                cout << setfill(' ') << fixed;
+                cout << setw(6*colWidth) << "Title" << setw(3*colWidth) << "Genres" << setw(colWidth) << "Ratings"
+                        << setw(colWidth) << "Count" << endl;
+                cout << setfill('*') << setw(12*colWidth) << "*" << endl; 
+                cout << setfill(' ') << fixed;
+
+            // std::cout << "      title       |       genres      |   rating  |   count   \n";
             for(int i = 0; i < tags.size(); i++){
                 aux3 = searchTag(tagTable, tags[i], sizes[2]);
                 if(aux3){
                     for(int j = 0; j < aux3->movieId.size(); j++){
                         aux = searchTitle(titleTable, aux3->movieId[j], sizes[0]);
                         if(aux){
-                            std::cout << aux->title << "    |   ";
+                            genre.clear();
+                            // std::cout << aux->title << "    |   ";
                             for(int l = 0; l < aux->genres.size(); l++){
-                                std::cout << aux->genres[l];
+                                // std::cout << aux->genres[l];
+                                genre+=aux->genres[l];
                                 if(l != aux->genres.size()-1){
-                                    std::cout << "|";
+                                    // std::cout << "|";
+                                    genre+= "|";
                                 }
                             }
-                            std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
+                            // std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
+                            cout << setw(6*colWidth) << aux->title << setw(3*colWidth) << genre << setw(colWidth) << aux->rating
+                                << setw(colWidth) << aux->count << endl;
+                            genre.clear();
                         }
                     }
                 }
