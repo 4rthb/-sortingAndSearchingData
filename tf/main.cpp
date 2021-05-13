@@ -135,7 +135,7 @@ int main(void){
             rgx6("shit(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
     ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
-    vector<int> movies, sizes = { 1000 , 1000, 1000 };
+    vector<int> movies, sizes = { 105000 , 180000, 50666 };
     bool first = true;
     int hash, id, date, pos, tam, auxI;
     float rating;
@@ -215,48 +215,39 @@ int main(void){
             break;
         }
         else if(regex_match(todo, matches, rgx1)){   //user ratings
-            // hash = Hash(stoi(matches[1].str()),sizes[1]);
-            // for(int i = 0; i < userTable[hash]->ls.movieId.size(); i++){
-            //     std::cout << userTable[hash]->ls.rating[i] << "     ";
-            //     aux = searchTitle(titleTable,userTable[hash]->ls.movieId[i], sizes[0]);
-            //     std::cout << aux->title << "    " << aux->rating << "  " << aux->count << "\n" ;
-            // }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // std::cout << matches[1].str();
-            // aux2 = searchUser(userTable, stoi(matches[1].str()), sizes[1]);
-            // if(aux2){
-            //     std::cout << "Rating    |       Title       |       Global  |   Count   \n";
-            //     for(int i = 0; i < aux2->ls.movieId.size(); i++){
-            //         aux = searchTitle(titleTable, aux2->ls.movieId[i], sizes[0]);
-            //         std::cout << userTable[hash]->ls.rating[i] << "     ";
-            //         std::cout << aux->title << "    " << aux->rating << "  " << aux->count << "\n"; 
-            //     }
-            // }
-            // else{
-            //     std::cout << "No user found!\n";
-            // }
+            aux2 = searchUser(userTable, stoi(matches[1].str()), sizes[1]);
+            if(aux2){
+                std::cout << "  Rating    |       Title       |       Global  |   Count   \n";
+                for(int i = 0; i < aux2->ls.movieId.size(); i++){
+                    aux = searchTitle(titleTable, aux2->ls.movieId[i], sizes[0]);
+                    std::cout << aux2->ls.rating[i] << "    |   ";
+                    std::cout << aux->title << "    |   " << aux->rating << "   |   " << aux->count << "\n"; 
+                }
+            }
+            else{
+                std::cout << "No user found!\n";
+            }
         }
         else if(regex_match(todo, matches, rgx2)){   //movie search
-            noquote = matches[1].str() + " ";
+            noquote = matches[1].str();
             char *mov = &noquote[0];
             TrieNode *subtree = search(tree, mov);
             if(subtree){
                 std::cout << "  movieId   |       title       |       genres      | ratings |   count   \n";
-                // get_all_ids(subtree, movies);
-                // for(auto& mov : movies){
-                //     std::cout << mov << "\n";
-                //     aux = searchTitle(titleTable, mov, sizes[0]);
-                //     if(aux){
-                //         std::cout << aux->movieId << "  " << aux->title << "    ";
-                //         for(int i = 0; i<aux->genres.size(); i++){
-                //             std::cout << aux->genres[i];
-                //             if(i!=aux->genres.size()-1){
-                //                 std::cout << "|";
-                //             }
-                //         }
-                //         std::cout << "  " << aux->rating << "   " << aux->count << "\n";
-                //     }
-                // }
+                get_all_ids(subtree, movies);
+                for(auto& mov : movies){
+                    aux = searchTitle(titleTable, mov, sizes[0]);
+                    if(aux){
+                        std::cout << aux->movieId << "  |   " << aux->title << "    |   ";
+                        for(int i = 0; i<aux->genres.size(); i++){
+                            std::cout << aux->genres[i];
+                            if(i!=aux->genres.size()-1){
+                                std::cout << "|";
+                            }
+                        }
+                        std::cout << "  |   " << aux->rating << "   |   " << aux->count << "\n";
+                    }
+                }
                 movies.clear();
             }
             else{

@@ -37,21 +37,21 @@ struct TrieNode *novoNode(char char_key)
 // se existe, marcar a o nodo com o movieId
 void insert(struct TrieNode** root, char *word, int movieId)
 {
-    // Base Case: Tree is empty
+    // arvore vazia
     if (!(*root))
         *root = novoNode(*word);
   
-    // If current character of word is smaller than root's character,
-    // then insert this word in left subtree of root
+    // se a key eh menor que caractere,
+    // insere o caractere na subtree da esquerda
     if ((*word) < (*root)->key)
         insert(&( (*root)->children_left ), word, movieId);
   
-    // If current character of word is greate than root's character,
-    // then insert this word in right subtree of root
+    // se a key eh maior que caractere,
+    // insere o caractere na subtree da direita
     else if ((*word) > (*root)->key)
         insert(&( (*root)->children_right ), word, movieId);
   
-    // If current character of word is same as root's character,
+    // se a key eh igual ao caractere
     else
     {
         if (*(word+1))
@@ -89,6 +89,25 @@ TrieNode* search(struct TrieNode *root, char *word)
 }
 
 // preenche lista de filmes com todos os filhos do nodo passado
+void get_ids(struct TrieNode *node, vector<int> &movies){
+    if(node->is_end==true){
+        movies.push_back(node->movieId);
+    }
+    if (!node){
+        return;
+    }
+    if(node->children){
+        get_ids(node->children, movies);
+    }
+    if(node->children_right){
+        get_ids(node->children_right, movies);
+    }
+    if(node->children_left){
+        get_ids(node->children_left, movies);
+    }
+}
+
+// preenche lista de filmes com todos os filhos do nodo passado
 void get_all_ids(struct TrieNode *node, vector<int> &movies){
     if(node->is_end==true){
         movies.push_back(node->movieId);
@@ -97,12 +116,7 @@ void get_all_ids(struct TrieNode *node, vector<int> &movies){
         return;
     }
     if(node->children){
-        get_all_ids(node->children, movies);
-    }
-    if(node->children_right){
-        get_all_ids(node->children_right, movies);
-    }
-    if(node->children_left){
-        get_all_ids(node->children_left, movies);
+        get_ids(node->children, movies);
     }
 }
+

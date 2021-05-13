@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 #include <string>
 
-#define N1 10000 
-#define N2 1000
-#define N3 1000
+#define N1 105000 
+#define N2 180000
+#define N3 50666
 using namespace std;
 /*
 Estrutura: Tabela Hash
@@ -117,7 +117,7 @@ void updateTitle(ListNodeTitle *pLista[N1], int movieId, string title, vector<st
     }
 }
 
-ListNodeTitle* searchTitle(ListNodeTitle *pLista[10000], int movieId, int size){
+ListNodeTitle* searchTitle(ListNodeTitle *pLista[N1], int movieId, int size){
     //realiza pesquisa pelo titulo, um titulo por vez
     int hash = Hash(movieId, size);         //calcula hash
     ListNodeTitle* aux = pLista[hash];      //ponteiro que aponta para nodo da lista encadeada
@@ -144,14 +144,12 @@ struct ListNodeUser* newNodoUser(int movieId, float rating, int userId, bool ful
     return pNode;
 }
 
-void insertUser(ListNodeUser *pLista[10000], int movieId, float rating, int userId, int size)
+void insertUser(ListNodeUser *pLista[N2], int movieId, float rating, int userId, int size)
 {//inserir User na tabela
     int index;
     ListNodeUser *pNode;                                        //nodo livre
     //calcula hash
     index = Hash(userId, size);                                 //calcula hash
-    
-        std::cout << userId << "\n";
 
     if (pLista[index]->full == false)
     {//caso não exista nodo
@@ -175,7 +173,7 @@ void insertUser(ListNodeUser *pLista[10000], int movieId, float rating, int user
     return;                                                     //fim da inserção
 }
 
-ListNodeUser* searchUser(ListNodeUser *pLista[10000], int userId, int size){
+ListNodeUser* searchUser(ListNodeUser *pLista[N2], int userId, int size){
     //realiza pesquisa de user
     int hash = Hash(userId, size);
     ListNodeUser* aux = pLista[hash];
@@ -210,7 +208,7 @@ struct ListNodeTag* newNodoTag(int movieId, string tag, bool full)
     return pNode;
 }
 
-void insertTag(ListNodeTag *pLista[10000], int movieId, string tag, int size)
+void insertTag(ListNodeTag *pLista[N3], int movieId, string tag, int size)
 {// inserir um item na tabela
     int index, is=0;
     ListNodeTag *pNode;                                              //nodo livre
@@ -244,7 +242,7 @@ void insertTag(ListNodeTag *pLista[10000], int movieId, string tag, int size)
     return;                                                             //fim da inserção
 }
 
-ListNodeTag* searchTag(ListNodeTag *pLista[10000], string tag, int size){
+ListNodeTag* searchTag(ListNodeTag *pLista[N3], string tag, int size){
     int hash = HashWord(tag, size);
     ListNodeTag* aux = pLista[hash];
     
