@@ -150,6 +150,8 @@ void insertUser(ListNodeUser *pLista[10000], int movieId, float rating, int user
     ListNodeUser *pNode;                                        //nodo livre
     //calcula hash
     index = Hash(userId, size);                                 //calcula hash
+    
+        std::cout << userId << "\n";
 
     if (pLista[index]->full == false)
     {//caso não exista nodo

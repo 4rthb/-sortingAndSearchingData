@@ -18,14 +18,14 @@ void swap(ListNodeTitle* a, ListNodeTitle* b)
     *b = t;
 }
 
-int partition (vector<ListNodeTitle> arr, int low, int high)
+int partition (vector<ListNodeTitle>& arr, int low, int high)
 {
-    int pivot = arr[high].ratingTotal;
+    float pivot = arr[high].rating;
     int i = (low - 1);
  
     for (int j = low; j <= high- 1; j++)
     {
-        if (arr[j].ratingTotal <= pivot)
+        if (arr[j].rating >= pivot)
         {
             i++;
             swap(&arr[i], &arr[j]);
@@ -35,7 +35,7 @@ int partition (vector<ListNodeTitle> arr, int low, int high)
     return (i + 1);
 }
 
-void quickSort(vector<ListNodeTitle> arr, int low, int high)
+void quickSort(vector<ListNodeTitle>& arr, int low, int high)
 {
     if (low < high)
     {
@@ -45,14 +45,14 @@ void quickSort(vector<ListNodeTitle> arr, int low, int high)
     }
 }
 
-int partitionR (vector<ListNodeTitle> arr, int low, int high)
+int partitionR (vector<ListNodeTitle>& arr, int low, int high)
 {
-    int pivot = arr[high].ratingTotal;
+    float pivot = arr[high].rating;
     int i = (low - 1);
  
     for (int j = low; j <= high- 1; j++)
     {
-        if (arr[j].ratingTotal >= pivot)
+        if (arr[j].rating <= pivot)
         {
             i++;
             swap(&arr[i], &arr[j]);
@@ -62,7 +62,7 @@ int partitionR (vector<ListNodeTitle> arr, int low, int high)
     return (i + 1);
 }
 
-void quickSortR(vector<ListNodeTitle> arr, int low, int high)
+void quickSortR(vector<ListNodeTitle>& arr, int low, int high)
 {
     if (low < high)
     {
@@ -73,7 +73,7 @@ void quickSortR(vector<ListNodeTitle> arr, int low, int high)
 }
 
 void printn(vector<ListNodeTitle> movies, int n){
-    std::cout << "Title |   Genres  |   Rating  |   Count\n";
+    std::cout << "      Title     |       Genres    |   Rating  |   Count \n";
     for(int h = 0; h < n; h++){
         std::cout << movies[h].title << "   |   ";
         for(auto& gen : movies[h].genres){
@@ -90,13 +90,18 @@ void movieSearch(ListNodeTitle *titleTable[], string genre, int n, int size, str
     for(int k = 0; k < size; k++){
         aux = titleTable[k];
         do{
-            for(int l=0; l<aux->genres.size() && aux->count>1000; l++){
+            // for(int l=0; l<aux->genres.size() && aux->count>1000; l++){
+            for(int l=0; l<aux->genres.size(); l++){
                 if(!genre.compare(aux->genres[l])){
                     movies.push_back(*aux);
                 }
             }
             aux=aux->next;
         }while(aux != NULL);
+    }
+    if(!movies.size()){
+        std::cout << "No movies found!\n";
+        return;
     }
     if(!type.compare("shit")){
         quickSortR(movies, 0, movies.size()-1);
@@ -127,12 +132,12 @@ void yearSearch(ListNodeTitle *titleTable[], int year, int size){
 int main(void){
 
     regex rgx1("user (\\d*)$"), rgx2("movie ([^\\n]*)$"), rgx3("tags ([^\\n]*)$"), rgx4("top(\\d*) \\'([^\\n]*)\\'$"), rgx5("year (\\d*)$"), 
-            rgx6("shittiest(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
+            rgx6("shit(\\d*) \\'([^\\n]*)\\'$"), rgxAux("\\'(.*?)\\'");
     ifstream f1("./data/minirating.csv"), f2("./data/movie_clean.csv"), f3("./data/tag_clean.csv");
     CsvParser parser1(f1), parser2(f2), parser3(f3);
     vector<int> movies, sizes = { 1000 , 1000, 1000 };
     bool first = true;
-    int hash, id, date;
+    int hash, id, date, pos, tam, auxI;
     float rating;
     string todo, split, noquote, genre, n;
     smatch matches;
@@ -180,13 +185,16 @@ int main(void){
             noquote.erase(noquote.size()-1,1);
             date = stoi(noquote);
             noquote = row[2];
-            // std::cout << noquote << "\n";
-            // while ((pos = noquote.find('|')) != string::npos) {
-            //     noquote = noquote.substr(0, pos);
-            //     std::cout << noquote << std::endl;
-            //     noquote.erase(0, pos + 1);
-            // } <------------------------------------------------------------------------------------------------------XXXX
-            genres.push_back(noquote);
+
+            tam = 0;
+            auxI = -1;
+            while(tam > auxI){
+                auxI = tam;
+                pos = noquote.find("|", tam);
+                genres.push_back(noquote.substr(tam, pos-tam));
+                tam = pos+1;
+            }
+
             updateTitle(titleTable, id, row[1], genres, date, sizes[0]);
             genres.clear();
         }
@@ -211,13 +219,13 @@ int main(void){
             // for(int i = 0; i < userTable[hash]->ls.movieId.size(); i++){
             //     std::cout << userTable[hash]->ls.rating[i] << "     ";
             //     aux = searchTitle(titleTable,userTable[hash]->ls.movieId[i], sizes[0]);
-            //     std::cout << aux->title << "    " << aux->ratingTotal << "  " << aux->count << "\n" 
+            //     std::cout << aux->title << "    " << aux->rating << "  " << aux->count << "\n" ;
             // }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            // std::cout << matches[1].str();
             // aux2 = searchUser(userTable, stoi(matches[1].str()), sizes[1]);
             // if(aux2){
-            //     std::cout << "Rating        Title       Global      Count";
+            //     std::cout << "Rating    |       Title       |       Global  |   Count   \n";
             //     for(int i = 0; i < aux2->ls.movieId.size(); i++){
             //         aux = searchTitle(titleTable, aux2->ls.movieId[i], sizes[0]);
             //         std::cout << userTable[hash]->ls.rating[i] << "     ";
@@ -234,19 +242,21 @@ int main(void){
             TrieNode *subtree = search(tree, mov);
             if(subtree){
                 std::cout << "  movieId   |       title       |       genres      | ratings |   count   \n";
-                get_all_ids(subtree, movies);
-                for(auto& mov : movies){
-                    std::cout << mov << "\n";
-                    // aux = searchTitle(titleTable, mov, sizes[0]);
-                    // std::cout << aux->movieId << "  " << aux->title << "    ";
-                    // for(int i = 0; i<aux->genres.size(); i++){
-                    //     std::cout << aux->genres[i];
-                    //     if(i!=aux->genres.size()-1){
-                    //         std::cout << "|";
-                    //     }
-                    // }
-                    // std::cout << "  " << aux->rating << "   " << aux->count << "\n";
-                }
+                // get_all_ids(subtree, movies);
+                // for(auto& mov : movies){
+                //     std::cout << mov << "\n";
+                //     aux = searchTitle(titleTable, mov, sizes[0]);
+                //     if(aux){
+                //         std::cout << aux->movieId << "  " << aux->title << "    ";
+                //         for(int i = 0; i<aux->genres.size(); i++){
+                //             std::cout << aux->genres[i];
+                //             if(i!=aux->genres.size()-1){
+                //                 std::cout << "|";
+                //             }
+                //         }
+                //         std::cout << "  " << aux->rating << "   " << aux->count << "\n";
+                //     }
+                // }
                 movies.clear();
             }
             else{
@@ -292,7 +302,7 @@ int main(void){
         else if(regex_match(todo, matches, rgx5)){   //year search
             yearSearch(titleTable, stoi(matches[1]),  sizes[0]);
         }
-        else if(regex_match(todo, matches, rgx6)){  //shittiest search
+        else if(regex_match(todo, matches, rgx6)){  //shit search
             genre = matches[2];
             n = matches[1];
             movieSearch(titleTable, genre, stoi(n), sizes[0], "shit");
